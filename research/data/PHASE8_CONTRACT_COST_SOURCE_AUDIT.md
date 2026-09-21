@@ -29,3 +29,8 @@ Paytm Money's current F&O FAQ states ₹10 per unique executed order. Therefore,
 Government of India Budget 2026 documentation states that STT on options premium and option exercise was proposed to rise to 0.15% from 0.10% and 0.125%, respectively, effective 1-Apr-2026. The repository cost engine uses those date-effective rates.
 
 Earlier 2024 budget material records the prior option-sale STT change to 0.10%, consistent with the sample-period implementation from October 2024.
+
+
+## Raw option dataset schema audit
+
+The pinned Hugging Face dataset's intraday schema has 16 columns and does not include a lot_size field. Therefore the Phase 8 engine cannot use a contract-level lot-size field from this dataset. The corrected fallback schedule is now driven by the official NSE cohort dates rather than the earlier expiry-date thresholds.
