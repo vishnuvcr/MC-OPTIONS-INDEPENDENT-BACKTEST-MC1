@@ -22,3 +22,5 @@ No unresolved critical errors at Phase 0 start.
 | 2026-09-21 | 4 | Error | Phase 4 summary script had an unterminated string literal. | Replaced multiline literal assembly with an explicit report string. | Resolved |
 
 | 2026-09-21 | 6 | Tooling | Initial Phase 6 workflow write hit JS template interpolation on shell variables. | Rewrote the workflow using a literal line-array generator; no research-method change. | Resolved |
+
+| 2026-09-21 | 6 | Error | Phase 6 robustness report formatter contained an unterminated string literal. | Replaced the embedded multiline literal with an escaped newline join. | Resolved |
