@@ -25,4 +25,4 @@ External scientific review identified methodological-framing and validation gaps
 - Manuscript distinguishes sample evidence from independent out-of-sample evidence.
 
 ## Status
-In progress — first remote run caught and resolved a legacy test-interface failure; numerical validation remains blocked until the corrected workflow passes.
+Implementation complete. The final single-runner workflow is committed; execution is pending GitHub hosted-runner capacity. No Phase 8 numerical result is accepted until that run completes.
