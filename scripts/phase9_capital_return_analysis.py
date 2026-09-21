@@ -42,23 +42,23 @@ def drawdown_stats(df: pd.DataFrame) -> float:
     drawdown = equity - equity.cummax()
     return float(drawdown.min())
 
-def overlap_stats(df: pd.DataFrame) -> tuple[int, float, list[dict]]:
+def overlap_stats(df: pd.DataFrame) -> tuple[int, float | None, list[dict]]:
     records = df[['signal_date', 'expiry', 'net_realized_rupees']].to_dict('records')
     max_concurrent = 0
-    worst_combined = 0.0
+    worst_combined = None
     worst_dates = []
     dates = pd.date_range(df['signal_date'].min(), df['expiry'].max(), freq='D')
     for d in dates:
         active = [i for i, r in enumerate(records) if r['signal_date'] <= d <= r['expiry']]
         max_concurrent = max(max_concurrent, len(active))
-        if active:
+        if len(active) >= 2:
             p = float(sum(records[i]['net_realized_rupees'] for i in active))
-            if p < worst_combined:
+            if worst_combined is None or p < worst_combined:
                 worst_combined = p
                 worst_dates = [{'date': str(d.date()), 'active_positions': active, 'combined_net_pnl': p}]
-            elif p == worst_combined and worst_combined < 0:
+            elif p == worst_combined:
                 worst_dates.append({'date': str(d.date()), 'active_positions': active, 'combined_net_pnl': p})
-    return max_concurrent, float(worst_combined), worst_dates
+    return max_concurrent, worst_combined, worst_dates
 
 def analyze(df: pd.DataFrame, underlying: str):
     d = premium_cashflows(df)
