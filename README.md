@@ -77,3 +77,5 @@ See:
 - [strategy specification](research/STRATEGY_SPEC.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
+- [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
+- [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
