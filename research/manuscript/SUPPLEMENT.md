@@ -107,3 +107,12 @@ It contains exact replays for:
 - 1,000 / 5,000 / 10,000 MC paths.
 
 Those scenarios must be run from raw option data because they can change the gate and strike-selection outcome.
+
+
+## S12. Phase 8 calibration-setting policy
+
+The common primary calibration is 756 historical sessions × 5,000 Monte Carlo paths for both NIFTY and SENSEX. The 504/756/1008 × 1,000/5,000/10,000 matrix was executed as a methodological sensitivity analysis. The observed sensitivity is not used to select different settings per index. That would condition the reported strategy on the same historical outcomes being evaluated. Any future instrument-specific calibration must be selected under a pre-registered development/validation split.
+
+## S13. Phase 8 primary raw-option result
+
+Primary 756/5,000 raw-option revalidation: NIFTY 63 executed trades, mean net P&L ₹966.46/trade, enhanced-friction mean ₹936.45; SENSEX 61 executed trades, mean net P&L ₹2,508.06/trade, enhanced-friction mean ₹2,478.65. Block-bootstrap 95% mean-P&L intervals were ₹-1,985.18 to ₹3,955.42 for NIFTY and ₹-479.84 to ₹5,530.85 for SENSEX. Both include zero. See `research/PHASE8_RESULTS.md` for the full matrix and audit details.
