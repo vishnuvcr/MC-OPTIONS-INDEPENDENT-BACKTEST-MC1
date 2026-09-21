@@ -20,6 +20,8 @@ How sensitive are results to:
 - cost assumptions
 - strike mapping when the exact quantile target is unavailable
 
+**Calibration-setting policy:** the locked primary calibration is common to NIFTY and SENSEX in this study (756 sessions × 5,000 paths). The 504/756/1008 × 1,000/5,000/10,000 matrix is sensitivity/revalidation only; it is not used to pick different settings for the two indices.
+
 ### RQ5 — Cross-index comparability
 How do NIFTY and SENSEX differ after exchange-specific expiry calendars, strike grids, lot sizes, and trading-cost schedules are correctly applied?
 
