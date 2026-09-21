@@ -19,9 +19,13 @@ def read_expiries(path: Path) -> list[pd.Timestamp]:
 
 
 def read_window(path: Path, expiry: pd.Timestamp, start: pd.Timestamp) -> pd.DataFrame:
+    available = set(pq.read_schema(path).names)
+    base_cols=["date","timestamp","expiry","strike","option_type","close","volume"]
+    if "lot_size" in available:
+        base_cols.append("lot_size")
     table = pq.read_table(
         path,
-        columns=["date","timestamp","expiry","strike","option_type","close","volume"],
+        columns=base_cols,
         filters=[
             ("expiry","=",expiry.strftime("%Y-%m-%d")),
             ("date",">=",start.strftime("%Y-%m-%d")),
@@ -35,6 +39,8 @@ def read_window(path: Path, expiry: pd.Timestamp, start: pd.Timestamp) -> pd.Dat
     x["strike"] = pd.to_numeric(x["strike"], errors="coerce")
     x["close"] = pd.to_numeric(x["close"], errors="coerce")
     x["volume"] = pd.to_numeric(x["volume"], errors="coerce")
+    if "lot_size" in x.columns:
+        x["lot_size"] = pd.to_numeric(x["lot_size"], errors="coerce")
     return x.dropna(subset=["date","timestamp","strike","option_type","close"])
 
 
@@ -137,7 +143,15 @@ def run_trade(
         intr=max(strikes[leg.label]-settle,0.0) if leg.option_type=="PE" else max(settle-strikes[leg.label],0.0)
         gross_pts += leg.quantity*(intr-raw[leg.label])
         net_pts += leg.quantity*(intr-slipped[leg.label])
-    lot=lot_size(underlying,expiry)
+    if "lot_size" in window.columns and window["lot_size"].notna().any():
+        vals=window["lot_size"].dropna().astype(int).unique()
+        if len(vals) != 1:
+            raise ValueError(f"multiple lot sizes in contract data: {vals.tolist()}")
+        lot=int(vals[0])
+        lot_source="contract_data"
+    else:
+        lot=lot_size(underlying,expiry)
+        lot_source="fallback_schedule"
     displacement = {k: float(strikes[k]) - float(qtargets[k]) for k in strikes}
     costs=entry_costs(slipped,qty,lot,expiry)
     costs["stt_expiry"]=expiry_stt(expiry,settle,strikes,qty,lot)
@@ -167,6 +181,7 @@ def run_trade(
         "available_strikes_by_type":json.dumps({t:sorted(set(float(v) for v in snap.loc[snap["option_type"]==t,"strike"].dropna())) for t in ("PE","CE")},sort_keys=True),
         "execution_prices_slipped":json.dumps(slipped,sort_keys=True),
         "lot_size":lot,
+        "lot_size_source":lot_source,
         "gross_realized_rupees":gross_pts*lot,
         "net_realized_rupees":net_pts*lot-costs["brokerage"]-costs["stt_entry"]-costs["stt_expiry"],
         "brokerage":costs["brokerage"],
