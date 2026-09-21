@@ -9,7 +9,8 @@ import pyarrow.parquet as pq
 
 from src.model.costs import entry_costs, entry_slipped_price, expiry_stt
 from src.model.mc import gross_mc_ev, historical_log_returns, select_strikes, simulate
-from src.model.strategy import LEGS, expiry_sessions, execution_rows, signal_spot_from_parity
+from src.model.strategy import LEGS, expiry_sessions, signal_spot_from_parity
+from src.model.execution import first_executable
 
 
 def read_expiries(path: Path) -> list[pd.Timestamp]:
@@ -106,7 +107,7 @@ def run_trade(underlying: str, path: Path, daily: pd.DataFrame, expiry: pd.Times
     terminals=simulate(s0,returns,len(sessions)-1)
     qtargets,strikes=select_strikes(terminals,snap)
     sig_prices=signal_prices(snap,strikes)
-    ex=execution_rows(window,signal_ts,strikes)
+    ex=first_executable(window,signal_ts,strikes)
     if ex is None:
         return None,"missing_common_execution"
     exec_ts,raw=ex
