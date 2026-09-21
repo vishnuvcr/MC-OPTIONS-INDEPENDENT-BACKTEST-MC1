@@ -55,3 +55,10 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - Candidate ES95: NIFTY Rs -30,889.80; SENSEX Rs -26,807.30.
 - Candidate ES99: NIFTY Rs -38,992.43; SENSEX Rs -38,352.77.
 - These figures are not final until Phase 3 validation.
+
+## Phase 3 validation complete (2026-09-21)
+
+- Validation workflow run 3 passed all tests and contract checks.
+- Leakage test confirms post-signal observations are excluded from the 756-session bootstrap input.
+- Execution test confirms strict post-09:30 common-timestamp selection.
+- Strike mapping uniqueness, 5,000 MC path count, strategy rule text, and historical-lot-size safeguards all passed.
