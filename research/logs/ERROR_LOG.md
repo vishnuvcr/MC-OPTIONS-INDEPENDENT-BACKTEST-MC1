@@ -18,3 +18,10 @@
 | 2026-09-21 | 6 | Environment | Direct local access to huggingface.co was unavailable from the execution container. | Retained pinned dataset revision and used completed GitHub Actions artifacts for validated trade-level diagnostics. | Infrastructure limitation |
 
 No unresolved strategy/model correctness error remains from Phases 0-5. The only unresolved item is the infrastructure-constrained raw-option MC calibration sensitivity matrix described in the Phase 6 results.
+
+| 2026-09-21 | 8 | Methodology | Phase 7 stated the final rule was pre-specified and that no parameter search occurred, but earlier BATMAN development included joint tuning. | Reframe development/tuning → rule freeze → validation; classify existing results according to whether their dates were seen during development. | Open |
+| 2026-09-21 | 8 | Methodology | MC-EV premium timestamp was not explicit enough to rule out post-signal execution-price leakage. | Add timestamp-level gate audit and require the gate premium to be sourced from the 09:30 information set. | Open |
+| 2026-09-21 | 8 | Statistics | Primary uncertainty used iid trade bootstrap only. | Add expiry-cluster/block bootstrap and paired date-level NIFTY/SENSEX comparison. | Open |
+| 2026-09-21 | 8 | Execution | First common executable observation is not equivalent to four-leg simultaneous fill. | Add bid/ask/spread/fill sensitivity where data permit and label fixed slippage as a stress assumption. | Open |
+| 2026-09-21 | 8 | Risk | Capital/margin and payoff-bound analysis was incomplete. | Add payoff diagrams, margin/capital requirement, ES sizing example, and tail/gap analysis. | Open |
+| 2026-09-21 | 8 | Robustness | Raw-option MC calibration matrix was not executed. | Re-run the full chain for all 27 calibration scenarios when runner capacity permits. | Open |
