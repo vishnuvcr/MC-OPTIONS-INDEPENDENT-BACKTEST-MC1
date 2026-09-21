@@ -110,3 +110,7 @@ Branch phase-8-methodological-revalidation was created. The locked strategy rule
 - Added full raw-option 9-scenario matrix runner per index (18 total scenarios) and pull-request/dispatch GitHub Actions workflow.
 - Added Paytm Money brokerage sensitivity and contract/cost source audit.
 - Critical data-governance finding: NIFTY lot-size changes are contract-cohort/effective-date dependent, so expiry-only hard-coded lot-size logic is not sufficient when contract-level lot size is unavailable. Phase 8 now prefers contract-level lot_size from the raw dataset and records the provenance source.
+
+## 2026-09-21 — Phase 8 first workflow validation result
+
+The first Phase 8 GitHub Actions run reached the test suite and correctly stopped before downloading market data. 15 tests passed and one legacy validation test failed because the execution function was extended from a 2-tuple to a 3-tuple carrying execution volumes. The test was updated to match the new audited return shape. No numerical backtest result was accepted from the failed run.
