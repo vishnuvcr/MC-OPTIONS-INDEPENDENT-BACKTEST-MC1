@@ -45,6 +45,7 @@ Primary questions:
 | 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
 | 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Complete* |
 | 8 | phase-8-methodological-revalidation | Correct development-history framing, leakage chronology audit, clustered uncertainty, full raw-option calibration, execution/capital/strike robustness | Complete |
+| 9 | phase-9-capital-return-analysis | Capital proxies, premium cash requirements, drawdown/concurrency, return ratios, and margin-source reconciliation | Complete* |
 
 ## Data principles
 
@@ -69,7 +70,7 @@ Every phase has its own branch and a manually runnable GitHub Actions workflow. 
 
 ## Status
 
-Phases 0-7 produced the original locked-rule historical sample. Phase 8 methodological revalidation is now complete on the pinned raw-option dataset. The current primary calibration remains common to both indices at **756 historical sessions × 5,000 MC paths**; the 18-scenario matrix is sensitivity analysis, not index-specific tuning. Phase 8 produced 63 NIFTY and 61 SENSEX executed trades in the primary scenario, with block-bootstrap mean-P&L intervals that include zero for both indices. NIFTY is materially calibration-sensitive; SENSEX remains positive across all nine tested calibration settings. No independent future-profitability claim is made.
+Phases 0-7 produced the original locked-rule historical sample. Phase 8 methodological revalidation is now complete on the pinned raw-option dataset. The current primary calibration remains common to both indices at **756 historical sessions × 5,000 MC paths**; the 18-scenario matrix is sensitivity analysis, not index-specific tuning. Phase 8 produced 63 NIFTY and 61 SENSEX executed trades in the primary scenario, with block-bootstrap mean-P&L intervals that include zero for both indices. NIFTY is materially calibration-sensitive; SENSEX remains positive across all nine tested calibration settings. Phase 9 now translates the same primary trades into explicit ES95 capital proxies, premium cash requirements, drawdown/concurrency reserves, and P&L-to-capital ratios. No independent future-profitability claim is made.
 
 See:
 - [research protocol](research/RESEARCH_PROTOCOL.md)
@@ -88,6 +89,10 @@ See:
 - [BATMAN development history](research/DEVELOPMENT_HISTORY.md)
 - [Prospective frozen validation protocol](research/PROSPECTIVE_FROZEN_VALIDATION_PROTOCOL.md)
 - [Phase 8 contract and cost source audit](research/data/PHASE8_CONTRACT_COST_SOURCE_AUDIT.md)
+- [Phase 9 capital/return plan](research/PHASE9_CAPITAL_RETURN_PLAN.md)
+- [Phase 9 results](research/PHASE9_RESULTS.md)
+- [Phase 9 margin source audit](research/data/PHASE9_CAPITAL_MARGIN_SOURCE_AUDIT.md)
+- [Phase 9 capital/return table](research/manuscript/tables/PHASE9_CAPITAL_RETURN.csv)
 - [Final conclusion](research/FINAL_CONCLUSION.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
@@ -95,3 +100,11 @@ See:
 
 ### Phase 8 status
 Phase 8 is complete. The locked strategy is unchanged. The full raw-option calibration matrix (3 windows × 3 path counts × 2 indices = 18 scenarios) executed successfully in authoritative GitHub Actions run `35641908887`. The primary research calibration remains **756 × 5,000 for both NIFTY and SENSEX**. No different index-specific settings are selected from the historical sensitivity table because that would be post hoc tuning. See `research/PHASE8_RESULTS.md` for the audited numerical results.
+
+
+### Phase 9 status
+Phase 9 is complete for the approved P&L-derived capital/return scope; exact historical broker/exchange margin remains a documented data limitation.
+
+Phase 9 is the capital-interpretation phase for the locked Phase 8 primary sample. Provisional results imply an ES95 capital proxy of about ₹31.8k per NIFTY position and ₹26.8k per SENSEX position; the conservative research reserve covering observed concurrency and drawdown is about ₹63.5k for NIFTY and ₹66.9k for SENSEX. These are P&L-derived capital proxies, not Paytm Money or exchange margin. The deterministic capital analysis is complete. The repository includes a manual/PR GitHub Actions workflow, but the current GitHub connector did not surface an automatic Phase 9 run/status; this is recorded as an infrastructure observability limitation, not as a successful remote run.
+
+*Phase 9 Complete* means the approved P&L-derived capital/return analysis is complete; the repository-side workflow remains manually runnable, while this environment did not surface an automatic remote workflow status.

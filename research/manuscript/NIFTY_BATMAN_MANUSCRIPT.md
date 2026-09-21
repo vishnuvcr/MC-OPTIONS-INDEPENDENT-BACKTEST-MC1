@@ -567,3 +567,29 @@ Historical NIFTY lot size cannot be treated as a simple expiry-date constant bec
 ### 15.8 Enhanced friction model
 
 The primary headline result remains based on the locked 2-point-per-leg slippage plus brokerage and STT model. Phase 8 additionally computes an enhanced statutory/venue-friction layer incorporating premium-based exchange transaction charges, SEBI turnover fee, buyer-side stamp duty and GST on broker/venue service fees. Because Paytm Money brokerage is account-vintage dependent, ₹10/₹15/₹20 per order is also treated as a sensitivity range. These enhanced results are robustness diagnostics rather than a claim that every account incurs exactly the same all-in charges.
+
+
+## 11. Capital, Margin Proxy, and Return Interpretation (Phase 9)
+
+Phase 9 uses the locked Phase 8 primary trade files without changing the strategy or calibration. The objective is to distinguish realized P&L from the capital required to carry the strategy.
+
+| Measure | NIFTY | SENSEX |
+|---|---:|---:|
+| Mean net P&L / trade | ₹966.46 | ₹2,508.06 |
+| ES95 loss | ₹31,753.75 | ₹26,807.30 |
+| ES99 loss | ₹38,992.43 | ₹38,352.77 |
+| Maximum historical drawdown | ₹61,576.41 | ₹66,886.42 |
+| Maximum simultaneous positions | 2 | 2 |
+| Conservative research capital proxy | ₹63,507.51 | ₹66,886.42 |
+| Mean P&L / ES95 | 3.04% | 9.36% |
+| Mean P&L / conservative capital proxy | 1.52% | 3.75% |
+
+The conservative research capital proxy is defined as max(ES95 × observed maximum concurrent positions, observed maximum drawdown). It is a historical P&L-derived reserve and must not be described as exchange or broker margin. The mean P&L/ES95 figures are risk-capital ratios per completed trade. The lower 1.52% and 3.75% ratios use the conservative reserve that accounts for both overlap and historical drawdown.
+
+The mean net entry premium cashflows were credits of ₹2,957.76 for NIFTY and ₹4,686.03 for SENSEX, while the maximum observed long-leg premium cash outlays were approximately ₹38,964 and ₹38,905 respectively. The negative net premium does not imply negligible capital because the short options require exchange-defined initial margin.
+
+NSE Clearing describes equity-derivatives initial margin as portfolio-based SPAN with a 99% one-day VaR framework, and Paytm Money states that its option-writing margin is exchange-defined and that its margin calculator accounts for SPAN, exposure, and hedge benefits. Because the Phase 8 trade files lack date-specific SPAN risk arrays and broker margin snapshots, this study does not claim an exact historical Paytm Money/NSE/BSE margin figure.
+
+The simple linear annual P&L-to-capital ratios (53.96% NIFTY and 129.93% SENSEX) are mechanical turnover-normalized historical ratios, not compounded returns or forecasts. They are shown only to quantify how often the historical trade opportunity reused the same research capital proxy.
+
+See `research/PHASE9_RESULTS.md` and `research/data/PHASE9_CAPITAL_MARGIN_SOURCE_AUDIT.md` for the complete capital definitions and source audit.

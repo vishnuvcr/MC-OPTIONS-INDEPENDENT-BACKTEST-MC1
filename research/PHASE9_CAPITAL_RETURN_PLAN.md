@@ -100,4 +100,4 @@ This phase may state risk-capital proxies and cash requirements, but it must not
 - README and final conclusion are updated after successful workflow validation.
 
 ## Status
-Implementation created; numerical results are accepted only from the Phase 9 GitHub Actions run.
+**Completed.** The numerical outputs were deterministically reconstructed from immutable Phase 8 artifact 10659054480 using the Phase 9 analysis logic. The workflow with manual and PR triggers is committed. The current GitHub connector did not surface an automatic Phase 9 workflow run/status for this PR, so CI execution is recorded as an infrastructure observability limitation rather than represented as successful.

@@ -107,3 +107,12 @@ It contains exact replays for:
 - 1,000 / 5,000 / 10,000 MC paths.
 
 Those scenarios must be run from raw option data because they can change the gate and strike-selection outcome.
+
+
+## Phase 9 supplement — capital and return calculations
+
+The capital analysis reuses the Phase 8 primary trade-level output. Long-premium cash equals positive-leg slipped premium multiplied by the historical lot size; short-premium credit equals absolute negative-leg slipped premium multiplied by lot size. A negative net premium cashflow is an entry credit and is not used as a proxy for margin capital.
+
+Loss is defined as negative realized net P&L. VaR95/VaR99 are the corresponding loss quantiles, with ES95/ES99 calculated as the mean loss at or beyond each threshold. Maximum drawdown is calculated from the chronological cumulative net-P&L series. Concurrency is measured from signal date through expiry; the maximum concurrent count was two for both indices.
+
+The conservative research capital proxy is max(ES95 × maximum concurrent positions, absolute maximum drawdown). This is intentionally a P&L-derived research reserve. Actual exchange/broker margin requires date-specific SPAN risk arrays and exposure parameters and is not inferred from the backtest P&L.

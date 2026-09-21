@@ -162,3 +162,26 @@ The consolidated Phase 8 workflow was reduced to one job and moved to an alterna
 - The 18-scenario matrix is treated as sensitivity/revalidation only. No index-specific setting is selected from the same historical sample because that would be post hoc tuning.
 - NIFTY shows materially greater calibration sensitivity than SENSEX; SENSEX remains positive across all nine tested settings.
 - Future instrument-specific calibration, if studied, must use a pre-registered selection rule and genuinely unseen validation expiries.
+
+
+## 2026-09-22 — Phase 9 capital/return analysis initiated
+
+User requested a capital and return interpretation for both NIFTY and SENSEX using the locked Phase 8 primary sample. A dedicated Phase 9 branch and plan were created. The phase is finite: premium cashflow, loss-tail statistics, drawdown, observed concurrency, P&L-derived capital proxies, and explicit return ratios; actual historical SPAN/broker margin is treated as a separate data limitation.
+
+## 2026-09-22 — Phase 9 implementation findings
+
+- Added a manual/PR GitHub Actions workflow that reuses immutable Phase 8 artifact 10659054480.
+- Added capital/return analysis code for NIFTY and SENSEX.
+- Reconstructed long-premium cash, short-premium credit, and net entry premium cashflow.
+- Defined ES95 per-position capital proxy, observed drawdown reserve, and conservative research capital proxy.
+- Provisional results: NIFTY conservative research capital proxy ₹63,507.51; SENSEX ₹66,886.42.
+- Provisional risk-capital ratios: NIFTY mean P&L/ES95 3.04% and mean P&L/conservative proxy 1.52%; SENSEX 9.36% and 3.75%.
+- Actual broker/exchange margin remains unclaimed because date-specific SPAN risk arrays and broker margin snapshots are absent from the Phase 8 trade output.
+- One code-audit correction was required: the first overlap diagnostic accidentally included singleton positions when labeling the worst overlapping result. The concurrent-position calculation was corrected to evaluate combined P&L only when at least two BATMAN positions were simultaneously active.
+
+## 2026-09-22 — Phase 9 capital/return analysis complete
+
+- NIFTY conservative research capital proxy: ₹63,507.51; mean P&L/conservative proxy: 1.52% per trade; mean P&L/ES95: 3.04%.
+- SENSEX conservative research capital proxy: ₹66,886.42; mean P&L/conservative proxy: 3.75% per trade; mean P&L/ES95: 9.36%.
+- Exact historical exchange/broker margin is not claimed.
+- The approved scope is complete. The remaining exact-margin reconstruction is a separate finite future extension, not part of this completed phase.
