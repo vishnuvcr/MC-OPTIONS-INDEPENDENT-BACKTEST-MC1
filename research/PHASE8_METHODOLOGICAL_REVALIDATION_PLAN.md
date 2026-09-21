@@ -25,4 +25,4 @@ External scientific review identified methodological-framing and validation gaps
 - Manuscript distinguishes sample evidence from independent out-of-sample evidence.
 
 ## Status
-**Active — authoritative numerical revalidation is executing.** Run `35641908887` has started successfully on the single hosted runner. Setup, tests, pinned dataset download, and raw-schema audit have passed; the NIFTY 18-scenario raw-option matrix is currently executing. No Phase 8 numerical result is accepted until the full chain and audits complete.
+**Completed — authoritative numerical revalidation succeeded.** Run `35641908887` completed successfully. The full 18-scenario raw-option matrix, NIFTY/SENSEX audits, and paired cross-index analysis completed and artifacts were uploaded. Results are recorded in `research/PHASE8_RESULTS.md`. The primary block-bootstrap confidence intervals include zero for both indices; NIFTY is materially calibration-sensitive. No claim of independent future profitability is made.
