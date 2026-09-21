@@ -244,7 +244,8 @@ def write_single(index_name: str, primary_path: Path, scenario_dir: Path, outdir
         t = regime_table(enriched, c)
         if not t.empty:
             report += [f"", f"### {c}", "", t.to_markdown(index=False)]
-    (outdir / "PHASE6_INDEX_REPORT.md").write_text("\n".join(report), encoding="utf-8")
+    report_text = chr(10).join(report)
+    (outdir / "PHASE6_INDEX_REPORT.md").write_text(report_text, encoding="utf-8")
 
 
 def compare_indices(nifty_summary: Path, sensex_summary: Path, outdir: Path) -> None:
@@ -271,10 +272,8 @@ def compare_indices(nifty_summary: Path, sensex_summary: Path, outdir: Path) -> 
     }])
     outdir.mkdir(parents=True, exist_ok=True)
     comp.to_csv(outdir / "cross_index_comparison.csv", index=False)
-    (outdir / "CROSS_INDEX_REPORT.md").write_text(
-        "# Cross-Index Comparison\n\n" + comp.to_markdown(index=False) + "\n",
-        encoding="utf-8",
-    )
+    cross_text = "# Cross-Index Comparison" + chr(10) + chr(10) + comp.to_markdown(index=False) + chr(10)
+    (outdir / "CROSS_INDEX_REPORT.md").write_text(cross_text, encoding="utf-8")
 
 
 if __name__ == "__main__":
