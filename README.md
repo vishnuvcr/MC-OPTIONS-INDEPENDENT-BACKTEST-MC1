@@ -82,5 +82,6 @@ See:
 - [References](research/manuscript/REFERENCES.md)
 - [Figures and charts](research/manuscript/FIGURES.md)
 - [Manuscript tables](research/manuscript/tables/PRIMARY_STATS.csv)
+- [Final conclusion](research/FINAL_CONCLUSION.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
