@@ -552,3 +552,8 @@ The 2026 results are coverage-to-date for the available intraday dataset, not fu
 ### 15.6 Raw-option calibration matrix
 
 The required 504/756/1008 × 1,000/5,000/10,000 scenarios must rerun the full raw-option chain: MC distribution, terminal quantiles, strike mapping, MC-EV gate, trade selection, execution and expiry P&L. A final robustness claim will not substitute perturbations of the already-selected trade list.
+
+
+### 15.7 Contract and brokerage qualification
+
+Historical NIFTY lot size cannot be treated as a simple expiry-date constant because NSE revisions apply by contract cohort/effective date. Phase 8 therefore prefers contract-level lot size when present in the raw data and records the source; otherwise the fallback schedule is explicitly identified as a limitation. Separately, Paytm Money brokerage depends on account vintage and published pricing has changed over time, so ₹20/order is retained as the study's historical assumption while ₹10/₹15/₹20 sensitivity is reported. The study does not claim that ₹20 is universal for every Paytm Money account.
