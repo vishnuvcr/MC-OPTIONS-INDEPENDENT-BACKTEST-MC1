@@ -1,0 +1,35 @@
+name: Phase 3 - Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "research/results/**"
+      - ".github/workflows/phase-3-validation.yml"
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          pip install pandas numpy pyarrow yfinance pytest
+      - name: Unit and leakage tests
+        run: pytest -q tests/
+      - name: Strategy-contract checks
+        run: |
+          grep -F "756-session bootstrap MC, 5,000 paths" research/STRATEGY_SPEC.md
+          grep -F "gross MC-EV > 0" research/STRATEGY_SPEC.md
+          grep -F "2 option points per execution leg" research/STRATEGY_SPEC.md
+          grep -F "+1 P35 PE, −2 P20 PE, +1 P65 CE, −2 P80 CE" research/STRATEGY_SPEC.md
+      - name: No mutable-current-lot assumption
+        run: |
+          grep -F "historical" research/data/CONTRACT_SCHEDULES.md
+          grep -F "date-effective" research/data/CONTRACT_SCHEDULES.md
