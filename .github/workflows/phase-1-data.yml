@@ -64,6 +64,7 @@ jobs:
           python - <<'PY'
           import os
           from pathlib import Path
+          import shutil
           from huggingface_hub import hf_hub_download
           years=[int(x) for x in os.environ["YEARS"].split(",")]
           for u in ("NIFTY","SENSEX"):
@@ -71,10 +72,10 @@ jobs:
               d.mkdir(parents=True, exist_ok=True)
               for y in years:
                   f=f"upstox_intraday/{u}/{u}_{y}.parquet"
-                  src=hf_hub_download("rissin/nse-options-intraday", filename=f, repo_type="dataset")
+                  src=hf_hub_download("rissin/nse-options-intraday", filename=f, repo_type="dataset", revision=open("data_revision.txt").read().strip())
                   dst=d/f"{u}_{y}.parquet"
                   if dst.exists(): dst.unlink()
-                  dst.hardlink_to(src)
+                  shutil.copy2(src, dst)
                   print(dst)
           PY
 
