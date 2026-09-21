@@ -122,3 +122,7 @@ Official NSE cohort dates showed that the earlier fallback schedule was too coar
 ## 2026-09-21 — Phase 8 entry-cost chronology correction
 
 A cost-date audit found that entry STT was keyed to expiry rather than actual execution. This could misclassify trades around the 1-Apr-2026 STT boundary. The engine now keys entry brokerage/venue/STT calculations to the first executable timestamp, while expiry STT remains keyed to the expiry date. A boundary unit test was added.
+
+## 2026-09-22 — Phase 8 execution bottleneck correction
+
+The monitoring UI disconnected while GitHub Actions was being polled, and the authoritative workflow was queued. The Phase 8 workflow previously requested two simultaneous hosted runners. It was consolidated to a single ubuntu-24.04 job executing both index matrices sequentially. This preserves the full 18-scenario design while reducing runner requirements and avoiding a two-runner scheduling bottleneck.
