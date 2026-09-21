@@ -7,7 +7,7 @@ from src.model.strategy import LEGS, choose_unique_strikes
 
 
 def test_bootstrap_uses_only_pre_signal_history():
-    dates=pd.date_range("2024-01-01", periods=800, freq="D")
+    dates=pd.date_range("2022-01-01", periods=1000, freq="D")
     close=np.exp(np.linspace(0,0.5,800))
     daily=pd.DataFrame({"date":dates,"close":close})
     # A huge post-signal move must not enter the 756-return information set.
