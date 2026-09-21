@@ -25,4 +25,4 @@ External scientific review identified methodological-framing and validation gaps
 - Manuscript distinguishes sample evidence from independent out-of-sample evidence.
 
 ## Status
-Implementation complete. The final single-runner workflow is committed; execution is pending GitHub hosted-runner capacity. No Phase 8 numerical result is accepted until that run completes.
+**Blocked by GitHub-hosted runner capacity.** Implementation and validation controls are complete, but the authoritative single-runner workflow remains queued (run 102). No Phase 8 numerical result is accepted until that run executes. This is an infrastructure stop condition, not a model-result conclusion.
