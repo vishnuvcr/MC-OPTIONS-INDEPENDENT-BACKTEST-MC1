@@ -8,13 +8,14 @@ Evaluate the frozen BATMAN specification on expiries that are genuinely unseen d
 
 Before the first prospective expiry:
 - strategy rule version is frozen;
-- MC bootstrap window/path count are frozen;
+- MC bootstrap window/path count are frozen (the current study freezes 756 sessions × 5,000 paths for both NIFTY and SENSEX);
 - strike mapping and tie-breaking are frozen;
 - 09:30 gate-premium source is frozen;
 - execution definition and slippage model are frozen;
 - cost schedule/version is frozen;
 - lot-size/expiry metadata source is frozen;
 - no threshold or entry/exit tuning is allowed.
+- no instrument-specific recalibration is allowed unless an explicit selection rule is registered before the validation period and the selection is based only on development data.
 
 ## Data firewall
 
