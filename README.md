@@ -45,7 +45,8 @@ Primary questions:
 | 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
 | 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Complete* |
 | 8 | phase-8-methodological-revalidation | Correct development-history framing, leakage chronology audit, clustered uncertainty, full raw-option calibration, execution/capital/strike robustness | Complete |
-| 9 | phase-9-capital-return-analysis | Capital proxies, premium cash requirements, drawdown/concurrency, return ratios, and margin-source reconciliation | Complete* |
+| 9 | phase-9-capital-return-analysis | Capital proxies, premium cash requirements, drawdown/concurrency, return ratios, and margin-source reconciliation | Complete |
+| 10 | phase-10-publication | Versioned public manuscript, supplement, figures, tables, and citation metadata | Complete |
 
 ## Data principles
 
@@ -79,7 +80,8 @@ See:
 - [strategy specification](research/STRATEGY_SPEC.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
-- [Final manuscript](research/manuscript/NIFTY_BATMAN_MANUSCRIPT.md)
+- [Published research manuscript v1.0](publication/README.md)
+- [Research manuscript source](research/manuscript/NIFTY_BATMAN_MANUSCRIPT.md)
 - [Supplement](research/manuscript/SUPPLEMENT.md)
 - [References](research/manuscript/REFERENCES.md)
 - [Figures and charts](research/manuscript/FIGURES.md)
@@ -108,3 +110,7 @@ Phase 9 is complete for the approved P&L-derived capital/return scope; exact his
 Phase 9 is the capital-interpretation phase for the locked Phase 8 primary sample. Provisional results imply an ES95 capital proxy of about ₹31.8k per NIFTY position and ₹26.8k per SENSEX position; the conservative research reserve covering observed concurrency and drawdown is about ₹63.5k for NIFTY and ₹66.9k for SENSEX. These are P&L-derived capital proxies, not Paytm Money or exchange margin. The deterministic capital analysis is complete. The repository includes a manual/PR GitHub Actions workflow, but the current GitHub connector did not surface an automatic Phase 9 run/status; this is recorded as an infrastructure observability limitation, not as a successful remote run.
 
 *Phase 9 Complete* means the approved P&L-derived capital/return analysis is complete; the repository-side workflow remains manually runnable, while this environment did not surface an automatic remote workflow status.
+
+
+### Phase 10 — Publication
+The research manuscript is now published in the repository as **Version 1.0** under `publication/`, with a clean manuscript, supplement, current figures/charts, authoritative results table, and `CITATION.cff`. The package is a repository-public preprint and is not represented as peer reviewed or journal accepted.

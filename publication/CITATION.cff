@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "Citation metadata for the NIFTY BATMAN research manuscript"
+title: "NIFTY BATMAN on NIFTY 50 and S&P BSE SENSEX Index Options: Reproducible Independent Backtest, Risk Analysis, Robustness, and Capital Interpretation"
+type: software
+authors:
+  - name: "Vishnu V C R"
+date-released: 2026-09-22
+version: "1.0"
+repository-code: "https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1"
+url: "https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/tree/main/publication"
+keywords:
+  - NIFTY
+  - SENSEX
+  - index options
+  - Monte Carlo
+  - backtest
+  - expected shortfall
+  - transaction costs
+  - capital risk
