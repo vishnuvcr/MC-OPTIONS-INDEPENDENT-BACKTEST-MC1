@@ -85,3 +85,13 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - Slippage stress to 5 points/leg leaves NIFTY approximately flat in sample mean and SENSEX positive.
 - The raw-option MC calibration matrix (504/756/1008 windows × 1,000/5,000/10,000 paths) remains implemented in the manual Phase 6 workflow but was not executed because the GitHub Actions runner queue remained unavailable.
 - Phase 6 is therefore marked complete with an explicit infrastructure limitation, and Phase 7 proceeds with that limitation as a manuscript item.
+
+## Phase 7 manuscript complete (2026-09-21)
+
+- Final manuscript created at `research/manuscript/NIFTY_BATMAN_MANUSCRIPT.md`.
+- Supplementary methods/audit trail created at `research/manuscript/SUPPLEMENT.md`.
+- References created at `research/manuscript/REFERENCES.md`.
+- Repository-native charts and source-value tables created under `research/manuscript/`.
+- Manual Phase 7 validation workflow added.
+- Final manuscript distinguishes validated primary results from the infrastructure-constrained raw-option MC calibration sensitivity.
+- The research plan is complete through Phase 7; future work is documented rather than extending the present study indefinitely.
