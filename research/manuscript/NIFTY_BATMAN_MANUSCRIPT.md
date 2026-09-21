@@ -557,3 +557,8 @@ The required 504/756/1008 × 1,000/5,000/10,000 scenarios must rerun the full ra
 ### 15.7 Contract and brokerage qualification
 
 Historical NIFTY lot size cannot be treated as a simple expiry-date constant because NSE revisions apply by contract cohort/effective date. Phase 8 therefore prefers contract-level lot size when present in the raw data and records the source; otherwise the fallback schedule is explicitly identified as a limitation. Separately, Paytm Money brokerage depends on account vintage and published pricing has changed over time, so ₹20/order is retained as the study's historical assumption while ₹10/₹15/₹20 sensitivity is reported. The study does not claim that ₹20 is universal for every Paytm Money account.
+
+
+### 15.8 Enhanced friction model
+
+The primary headline result remains based on the locked 2-point-per-leg slippage plus brokerage and STT model. Phase 8 additionally computes an enhanced statutory/venue-friction layer incorporating premium-based exchange transaction charges, SEBI turnover fee, buyer-side stamp duty and GST on broker/venue service fees. Because Paytm Money brokerage is account-vintage dependent, ₹10/₹15/₹20 per order is also treated as a sensitivity range. These enhanced results are robustness diagnostics rather than a claim that every account incurs exactly the same all-in charges.
