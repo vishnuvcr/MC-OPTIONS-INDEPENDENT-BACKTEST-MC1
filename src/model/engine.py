@@ -164,6 +164,7 @@ def run_trade(
         "signal_prices":json.dumps(sig_prices,sort_keys=True),
         "execution_prices_raw":json.dumps(raw,sort_keys=True),
         "execution_volume":json.dumps(raw_volume,sort_keys=True),
+        "available_strikes_by_type":json.dumps({t:sorted(set(float(v) for v in snap.loc[snap["option_type"]==t,"strike"].dropna())) for t in ("PE","CE")},sort_keys=True),
         "execution_prices_slipped":json.dumps(slipped,sort_keys=True),
         "lot_size":lot,
         "gross_realized_rupees":gross_pts*lot,
