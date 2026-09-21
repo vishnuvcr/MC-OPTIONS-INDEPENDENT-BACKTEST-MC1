@@ -9,7 +9,7 @@ Status: completed successfully
 | Index | Executed trades | Mean net P&L | Mean net P&L with enhanced friction | Block-bootstrap 95% CI | ES95 |
 |---|---:|---:|---:|---:|---:|
 | NIFTY | 63 | ₹966.46 | ₹936.45 | ₹-1,985.18 to ₹3,955.42 | ₹-31,753.75 |
-| SENSEX | 61 | ₹2,508.06 | ₹2,478.65 | ₹-₹479.84 to ₹5,530.85 | ₹-26,807.30 |
+| SENSEX | 61 | ₹2,508.06 | ₹2,478.65 | ₹-479.84 to ₹5,530.85 | ₹-26,807.30 |
 
 The block-bootstrap confidence intervals for mean net P&L include zero for both indices.
 
@@ -32,6 +32,10 @@ The block-bootstrap confidence intervals for mean net P&L include zero for both 
 | 1008 | 2,132.92 | 2,579.47 | 2,773.43 |
 
 The primary NIFTY result is materially sensitive to calibration choice; the SENSEX result is positive across all nine tested configurations.
+
+## Calibration-setting policy
+
+The study retains one common locked primary calibration for both indices: **756 historical sessions × 5,000 MC paths**. The 18-scenario matrix is a sensitivity/revalidation analysis, not a parameter-selection exercise. Although the highest observed sample mean differs across the tested settings, selecting an index-specific setting from these same historical outcomes would be post hoc tuning and is therefore not adopted. Any future instrument-specific calibration must be selected by a pre-registered rule using development data and then evaluated on genuinely unseen expiries.
 
 ## Execution and gate audits
 
