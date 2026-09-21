@@ -1,5 +1,9 @@
 name: Phase 8 - Methodological revalidation
 
+concurrency:
+  group: phase8-revalidation
+  cancel-in-progress: true
+
 on:
   push:
     branches: [phase-8-methodological-revalidation]
