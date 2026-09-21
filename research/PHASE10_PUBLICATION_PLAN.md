@@ -22,7 +22,7 @@ Publication is a documentation and dissemination phase only. It does not change 
 - Phase 9 conservative research capital proxy: ₹63,507.51 NIFTY and ₹66,886.42 SENSEX.
 
 ## Publication status
-The manuscript is published as a repository-public preprint/publication package. It is not represented as peer reviewed or journal accepted.
+**Completed.** The manuscript is published in the repository as Version 1.0 under `publication/`. It is explicitly labeled a repository-public preprint/publication package and is not represented as peer reviewed or journal accepted.
 
 ## Acceptance criteria
 - One clean publication copy is available.
