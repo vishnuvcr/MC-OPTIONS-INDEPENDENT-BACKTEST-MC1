@@ -105,6 +105,20 @@ def execution_audit(df: pd.DataFrame) -> dict:
     }
 
 
+def brokerage_sensitivity(df: pd.DataFrame, rates=(10.0,15.0,20.0)) -> pd.DataFrame:
+    rows=[]
+    for rate in rates:
+        vals=df.apply(lambda r: float(r["net_realized_rupees"]) + float(r["brokerage"]) - 4.0*rate, axis=1)
+        rows.append({
+            "brokerage_rupees_per_order":rate,
+            "mean_net_rupees":float(vals.mean()),
+            "median_net_rupees":float(vals.median()),
+            "sum_net_rupees":float(vals.sum()),
+            "profit_share":float((vals>0).mean()),
+        })
+    return pd.DataFrame(rows)
+
+
 def payoff_structure() -> dict:
     return {
         "portfolio":"+1 P35 - 2 P20 + 1 C65 - 2 C80",
@@ -142,6 +156,7 @@ def write_index(index: str, path: Path, outdir: Path):
     (outdir/"payoff_structure.json").write_text(json.dumps(payoff,indent=2),encoding="utf-8")
     es95=float(df["net_realized_rupees"][df["net_realized_rupees"]<=df["net_realized_rupees"].quantile(0.05)].mean())
     sizing_examples(es95).to_csv(outdir/"es95_sizing_examples.csv",index=False)
+    brokerage_sensitivity(df).to_csv(outdir/"brokerage_sensitivity.csv",index=False)
     summary=pd.DataFrame([{
         "index":index,
         "trades":len(df),
