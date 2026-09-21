@@ -1,0 +1,152 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pyarrow.parquet as pq
+
+from src.model.costs import entry_costs, entry_slipped_price, expiry_stt
+from src.model.mc import gross_mc_ev, historical_log_returns, select_strikes, simulate
+from src.model.strategy import LEGS, expiry_sessions, signal_spot_from_parity
+from src.model.execution import first_executable
+
+
+def read_expiries(path: Path) -> list[pd.Timestamp]:
+    df = pq.read_table(path, columns=["expiry"]).to_pandas()
+    return sorted(pd.to_datetime(df["expiry"], errors="coerce").dropna().dt.normalize().unique())
+
+
+def read_window(path: Path, expiry: pd.Timestamp, start: pd.Timestamp) -> pd.DataFrame:
+    table = pq.read_table(
+        path,
+        columns=["date","timestamp","expiry","strike","option_type","close","volume"],
+        filters=[
+            ("expiry","=",expiry.strftime("%Y-%m-%d")),
+            ("date",">=",start.strftime("%Y-%m-%d")),
+            ("date","<=",expiry.strftime("%Y-%m-%d")),
+        ],
+    )
+    x = table.to_pandas()
+    x["date"] = pd.to_datetime(x["date"], errors="coerce").dt.normalize()
+    x["timestamp"] = pd.to_datetime(x["timestamp"], errors="coerce")
+    x["expiry"] = pd.to_datetime(x["expiry"], errors="coerce").dt.normalize()
+    x["strike"] = pd.to_numeric(x["strike"], errors="coerce")
+    x["close"] = pd.to_numeric(x["close"], errors="coerce")
+    x["volume"] = pd.to_numeric(x["volume"], errors="coerce")
+    return x.dropna(subset=["date","timestamp","strike","option_type","close"])
+
+
+def load_daily(ticker: str) -> pd.DataFrame:
+    import yfinance as yf
+    df = yf.download(ticker, period="max", interval="1d", auto_adjust=False, progress=False)
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns=[c[0] for c in df.columns]
+    df=df.reset_index()
+    df.columns=[str(c).lower().replace(" ","_") for c in df.columns]
+    c="date" if "date" in df.columns else "datetime"
+    df[c]=pd.to_datetime(df[c],utc=True).dt.tz_convert("Asia/Kolkata").dt.tz_localize(None).dt.normalize()
+    return df.rename(columns={c:"date"})[["date","close"]].dropna().drop_duplicates("date").sort_values("date")
+
+
+def signal_snapshot(window: pd.DataFrame, signal_date: pd.Timestamp):
+    x = window.copy()
+    x["timestamp"] = pd.to_datetime(x["timestamp"], errors="coerce")
+    if x["timestamp"].dt.tz is None:
+        x["timestamp"] = x["timestamp"].dt.tz_localize("Asia/Kolkata")
+    else:
+        x["timestamp"] = x["timestamp"].dt.tz_convert("Asia/Kolkata")
+    cutoff = pd.Timestamp(f"{signal_date.date()} 09:30:00", tz="Asia/Kolkata")
+    x = x[x["timestamp"] <= cutoff]
+    if x.empty:
+        return None, None
+    ts = x["timestamp"].max()
+    return ts, x[x["timestamp"] == ts].copy()
+
+
+def signal_prices(snapshot: pd.DataFrame, strikes: dict[str,float]) -> dict[str,float]:
+    out={}
+    for leg in LEGS:
+        x=snapshot[
+            (snapshot["option_type"]==leg.option_type)
+            &(snapshot["strike"]==float(strikes[leg.label]))
+            &(snapshot["close"]>0)
+        ]
+        if x.empty:
+            raise ValueError("missing signal price "+leg.label)
+        out[leg.label]=float(x["close"].iloc[-1])
+    return out
+
+
+def lot_size(underlying: str, expiry: pd.Timestamp) -> int:
+    if underlying=="NIFTY":
+        if expiry<pd.Timestamp("2024-05-01"): return 50
+        if expiry<pd.Timestamp("2025-01-02"): return 25
+        if expiry<pd.Timestamp("2025-12-25"): return 75
+        return 65
+    if underlying=="SENSEX":
+        return 10 if expiry<pd.Timestamp("2024-11-20") else 20
+    raise ValueError(underlying)
+
+
+def run_trade(underlying: str, path: Path, daily: pd.DataFrame, expiry: pd.Timestamp):
+    sessions=expiry_sessions(daily["date"].tolist(), expiry)
+    if sessions is None:
+        return None,"missing_d3"
+    signal_date=sessions[0]
+    window=read_window(path, expiry, signal_date)
+    signal_ts,snap=signal_snapshot(window, signal_date)
+    if snap is None:
+        return None,"missing_signal_snapshot"
+    fallback=float(daily.loc[daily["date"]<signal_date,"close"].iloc[-1])
+    s0,s0_source=signal_spot_from_parity(snap,fallback)
+    returns=historical_log_returns(daily,signal_date)
+    if len(returns)<756:
+        return None,"missing_756_history"
+    terminals=simulate(s0,returns,len(sessions)-1)
+    qtargets,strikes=select_strikes(terminals,snap)
+    sig_prices=signal_prices(snap,strikes)
+    ev=gross_mc_ev(terminals,strikes,sig_prices)
+    if ev <= 0:
+        return None,"mc_ev_gate_fail"
+    ex=first_executable(window,signal_ts,strikes)
+    if ex is None:
+        return None,"missing_common_execution"
+    exec_ts,raw=ex
+    qty={x.label:x.quantity for x in LEGS}
+    slipped={k:entry_slipped_price(v,qty[k],2.0) for k,v in raw.items()}
+    settle=float(daily.loc[daily["date"]==expiry,"close"].iloc[0])
+    gross_pts=0.0
+    net_pts=0.0
+    for leg in LEGS:
+        intr=max(strikes[leg.label]-settle,0.0) if leg.option_type=="PE" else max(settle-strikes[leg.label],0.0)
+        gross_pts += leg.quantity*(intr-raw[leg.label])
+        net_pts += leg.quantity*(intr-slipped[leg.label])
+    lot=lot_size(underlying,expiry)
+    costs=entry_costs(slipped,qty,lot,expiry)
+    costs["stt_expiry"]=expiry_stt(expiry,settle,strikes,qty,lot)
+    return {
+        "underlying":underlying,
+        "expiry":str(expiry.date()),
+        "signal_date":str(signal_date.date()),
+        "signal_timestamp":str(signal_ts),
+        "execution_timestamp":str(exec_ts),
+        "s0":s0,
+        "s0_source":s0_source,
+        "settlement_spot":settle,
+        "mc_ev_points":ev,
+        "gate":True,
+        "executed":True,
+        "strikes":json.dumps(strikes,sort_keys=True),
+        "quantile_targets":json.dumps(qtargets,sort_keys=True),
+        "signal_prices":json.dumps(sig_prices,sort_keys=True),
+        "execution_prices_raw":json.dumps(raw,sort_keys=True),
+        "execution_prices_slipped":json.dumps(slipped,sort_keys=True),
+        "lot_size":lot,
+        "gross_realized_rupees":gross_pts*lot,
+        "net_realized_rupees":net_pts*lot-costs["brokerage"]-costs["stt_entry"]-costs["stt_expiry"],
+        "brokerage":costs["brokerage"],
+        "stt_entry":costs["stt_entry"],
+        "stt_expiry":costs["stt_expiry"],
+    },None

@@ -42,3 +42,16 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - 2024 NIFTY and SENSEX option parquet files downloaded and passed structural QA.
 - NIFTY and SENSEX daily index histories passed the 756-session minimum check.
 - Phase 1 artifact upload completed successfully.
+
+## 2026-09-21 — Phase 2 complete
+
+- Unit tests passed.
+- Fresh Phase 2 workflow run 14 completed successfully.
+- Primary gate was enforced before execution.
+- Executed sample: 63 NIFTY trades and 61 SENSEX trades.
+- Gate failures: 30 NIFTY candidates and 31 SENSEX candidates.
+- Signal-data gaps: 21 NIFTY and 13 SENSEX D3 candidates had no usable pre-09:30 snapshot.
+- Candidate descriptive net mean: NIFTY Rs 1,183.66 per executed trade; SENSEX Rs 2,507.53.
+- Candidate ES95: NIFTY Rs -30,889.80; SENSEX Rs -26,807.30.
+- Candidate ES99: NIFTY Rs -38,992.43; SENSEX Rs -38,352.77.
+- These figures are not final until Phase 3 validation.

@@ -1,0 +1,76 @@
+name: Phase 2 - Model and engine
+
+on:
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Option years, comma-separated"
+        required: true
+        default: "2024,2025,2026"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/model/**"
+      - "tests/**"
+      - ".github/workflows/phase-2-model.yml"
+
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          pip install pandas numpy pyarrow yfinance huggingface_hub pytest
+      - name: Unit tests
+        run: pytest -q tests/test_model.py
+      - name: Resolve dataset revision
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          u="https://huggingface.co/api/datasets/rissin/nse-options-intraday/revision/main"
+          with urllib.request.urlopen(u, timeout=60) as r:
+              x=json.load(r)
+          open("data_revision.txt","w").write(x.get("sha","unknown"))
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nse-options-${{ hashFiles('data_revision.txt') }}-full
+      - name: Download selected option files
+        env:
+          YEARS: ${{ inputs.years || '2024,2025,2026' }}
+        run: |
+          python - <<'PY'
+          import os, shutil
+          from pathlib import Path
+          from huggingface_hub import hf_hub_download
+          rev=open("data_revision.txt").read().strip()
+          for u in ("NIFTY","SENSEX"):
+              d=Path("data/raw/hf")/u
+              d.mkdir(parents=True,exist_ok=True)
+              for y in [int(x) for x in os.environ["YEARS"].split(",") if x.strip()]:
+                  f=f"upstox_intraday/{u}/{u}_{y}.parquet"
+                  src=hf_hub_download("rissin/nse-options-intraday",filename=f,repo_type="dataset",revision=rev)
+                  shutil.copy2(src,d/f"{u}_{y}.parquet")
+          PY
+      - name: Run NIFTY
+        env:
+          YEARS: ${{ inputs.years || '2024,2025,2026' }}
+        run: python -m src.model.run --underlying NIFTY --years "$YEARS"
+      - name: Run SENSEX
+        env:
+          YEARS: ${{ inputs.years || '2024,2025,2026' }}
+        run: python -m src.model.run --underlying SENSEX --years "$YEARS"
+      - name: Upload model outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-model
+          path: |
+            data/processed/phase2/
+            data_revision.txt
+
+# Fresh validation run after gate/timestamp fixes
