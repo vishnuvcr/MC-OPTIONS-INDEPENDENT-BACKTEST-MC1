@@ -106,3 +106,5 @@ Phase 8 is complete. The locked strategy is unchanged. The full raw-option calib
 Phase 9 is complete for the approved P&L-derived capital/return scope; exact historical broker/exchange margin remains a documented data limitation.
 
 Phase 9 is the capital-interpretation phase for the locked Phase 8 primary sample. Provisional results imply an ES95 capital proxy of about ₹31.8k per NIFTY position and ₹26.8k per SENSEX position; the conservative research reserve covering observed concurrency and drawdown is about ₹63.5k for NIFTY and ₹66.9k for SENSEX. These are P&L-derived capital proxies, not Paytm Money or exchange margin. The deterministic capital analysis is complete. The repository includes a manual/PR GitHub Actions workflow, but the current GitHub connector did not surface an automatic Phase 9 run/status; this is recorded as an infrastructure observability limitation, not as a successful remote run.
+
+*Phase 9 Complete* means the approved P&L-derived capital/return analysis is complete; the repository-side workflow remains manually runnable, while this environment did not surface an automatic remote workflow status.
