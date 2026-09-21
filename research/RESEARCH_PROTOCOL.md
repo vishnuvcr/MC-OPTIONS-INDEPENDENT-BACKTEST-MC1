@@ -95,6 +95,22 @@ No result will be called statistically meaningful solely on a p-value. Effect si
 3. Secondary vendor data only when required for missing intraday history.
 4. All deviations from primary sources must be documented.
 
+## Development-history rule
+
+The final locked specification is immutable, but scientific status depends on how it was selected. Any earlier joint tuning of entry day, entry time, exit method, bootstrap settings, or related parameters must be disclosed. Historical results produced after research-stage selection are not described as independently out-of-sample unless validation dates were genuinely unseen during development.
+
+## Required chronology audit
+
+The MC-EV gate must use information available at the 09:30 signal cut-off. The premium used by the gate must be identified by timestamp and cannot be selected from the later execution observation.
+
+## Dependence-aware uncertainty
+
+Primary uncertainty must include expiry-cluster/block bootstrap or an equivalent chronology-preserving resampling method. Trade-level iid bootstrap remains a descriptive secondary analysis. NIFTY/SENSEX comparison should use paired differences on comparable dates where the design permits.
+
+## Execution realism
+
+The 2-point-per-leg slippage assumption is a research stress assumption, not a validated market-impact estimate. Where executable bid/ask data permit, spread/fill sensitivity should be reported separately.
+
 ## Stop conditions
 
-The research stops after Phase 7. A result can be reported only if the critical validation suite passes and all material data gaps are disclosed.
+The research stops after the approved methodological revalidation phase. A result can be reported only if the critical validation suite passes and all material data gaps are disclosed. No new parameter optimization is introduced by this corrective phase.
