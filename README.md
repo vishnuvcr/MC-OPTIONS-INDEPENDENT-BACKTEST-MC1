@@ -44,6 +44,7 @@ Primary questions:
 | 5 | phase-5-sensex | Full SENSEX backtest and diagnostics | Complete |
 | 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
 | 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Complete |
+| 8 | phase-8-methodological-revalidation | Methodological revalidation and raw-option MC calibration matrix | Active |
 
 ## Data principles
 
@@ -68,7 +69,7 @@ Every phase has its own branch and a manually runnable GitHub Actions workflow. 
 
 ## Status
 
-Phases 0-7 are complete. The validated primary sample is 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. The final manuscript records the positive sample results, tail risk, execution sensitivity, and the infrastructure-constrained raw-option MC calibration sensitivity limitation.
+Phases 0-7 are complete. Phase 8 is actively executing the corrective raw-option revalidation. Authoritative GitHub Actions run 35641908887 has passed setup, tests, raw-data download, and schema audit; the NIFTY 18-scenario matrix is currently running, with SENSEX and downstream audits pending. The validated Phase 7 baseline remains 63 NIFTY trades and 61 SENSEX trades. No Phase 8 numerical result is accepted until the full chain and audits complete.
 
 See:
 - [research protocol](research/RESEARCH_PROTOCOL.md)
