@@ -43,6 +43,7 @@ def test_execution_is_strictly_after_signal_and_common_timestamp():
     ts, prices, volumes=out
     assert ts == pd.Timestamp("2024-01-02 09:31:00")
     assert all(v==11.0 for v in prices.values())
+    assert all(v==1.0 for v in volumes.values())
 
 
 def test_four_target_strikes_are_unique():
