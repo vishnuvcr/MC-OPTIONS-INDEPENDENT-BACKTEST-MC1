@@ -84,6 +84,7 @@ See:
 - [Figures and charts](research/manuscript/FIGURES.md)
 - [Manuscript tables](research/manuscript/tables/PRIMARY_STATS.csv)
 - [Phase 8 methodological revalidation plan](research/PHASE8_METHODOLOGICAL_REVALIDATION_PLAN.md)
+- [BATMAN development history](research/DEVELOPMENT_HISTORY.md)
 - [Phase 8 contract and cost source audit](research/data/PHASE8_CONTRACT_COST_SOURCE_AUDIT.md)
 - [Final conclusion](research/FINAL_CONCLUSION.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
