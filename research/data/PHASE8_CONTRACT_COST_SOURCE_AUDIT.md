@@ -22,3 +22,10 @@ Paytm Money's current F&O FAQ states ₹10 per unique executed order. Therefore,
 - NSE Circular 176/2025: https://nsearchives.nseindia.com/content/circulars/FAOP70616.pdf
 - Paytm Money 2023 pricing update: https://www.paytmmoney.com/blog/brokerage-charges-increase-from-25th-aug-23-existing-users-will-continue-on-old-brokerage-charges/
 - Paytm Money current F&O FAQ: https://www.paytmmoney.com/stocks/customer/fno-faq/onboarding-and-kyc/account-segment-activation/how-to-activate-fo-from-mobile-app-web
+
+
+## STT evidence
+
+Government of India Budget 2026 documentation states that STT on options premium and option exercise was proposed to rise to 0.15% from 0.10% and 0.125%, respectively, effective 1-Apr-2026. The repository cost engine uses those date-effective rates.
+
+Earlier 2024 budget material records the prior option-sale STT change to 0.10%, consistent with the sample-period implementation from October 2024.
