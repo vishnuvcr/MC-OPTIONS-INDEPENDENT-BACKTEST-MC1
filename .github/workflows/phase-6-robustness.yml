@@ -68,11 +68,11 @@ jobs:
               shutil.copy2(src,Path("data/raw/hf/NIFTY")/f"NIFTY_{y}.parquet")
           PY
       - name: Run NIFTY scenario
-        run: python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window ${{ matrix.window }} --paths ${{ matrix.paths }} --output data/processed/scenario.csv
+        run: python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window ${{ matrix.window }} --paths ${{ matrix.paths }} --output data/processed/nifty_${{ matrix.label }}.csv
       - uses: actions/upload-artifact@v4
         with:
           name: phase6-nifty-${{ matrix.label }}
-          path: data/processed/scenario.csv
+          path: data/processed/nifty_${{ matrix.label }}.csv
 
   sensex-scenarios:
     strategy:
@@ -129,11 +129,11 @@ jobs:
               shutil.copy2(src,Path("data/raw/hf/SENSEX")/f"SENSEX_{y}.parquet")
           PY
       - name: Run SENSEX scenario
-        run: python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window ${{ matrix.window }} --paths ${{ matrix.paths }} --output data/processed/scenario.csv
+        run: python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window ${{ matrix.window }} --paths ${{ matrix.paths }} --output data/processed/sensex_${{ matrix.label }}.csv
       - uses: actions/upload-artifact@v4
         with:
           name: phase6-sensex-${{ matrix.label }}
-          path: data/processed/scenario.csv
+          path: data/processed/sensex_${{ matrix.label }}.csv
 
   analysis:
     needs: [nifty-scenarios, sensex-scenarios]
@@ -155,31 +155,13 @@ jobs:
           python-version: "3.11"
       - name: Install
         run: pip install pandas numpy tabulate yfinance
-      - name: Rename scenario files
+      - name: Prepare scenario files
         run: |
           mkdir -p data/processed/phase6/nifty/scenarios data/processed/phase6/sensex/scenarios
-          i=0; for f in data/phase6/nifty/*.csv; do i=$((i+1)); cp "$f" "data/processed/phase6/nifty/scenarios/nifty_s${i}.csv"; done
-          i=0; for f in data/phase6/sensex/*.csv; do i=$((i+1)); cp "$f" "data/processed/phase6/sensex/scenarios/sensex_s${i}.csv"; done
-      - name: Identify primary files
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import pandas as pd
-          def find_primary(folder):
-              files=list(Path(folder).glob("*.csv"))
-              chosen=None
-              for f in files:
-                  df=pd.read_csv(f,nrows=1)
-                  # Primary is the only 5k-path file with the expected 63/61 trade pattern.
-                  if chosen is None:
-                      chosen=f
-              return chosen
-          n=find_primary("data/processed/phase6/nifty/scenarios")
-          s=find_primary("data/processed/phase6/sensex/scenarios")
-          Path("data/processed/phase6/nifty/primary.csv").write_bytes(n.read_bytes())
-          Path("data/processed/phase6/sensex/primary.csv").write_bytes(s.read_bytes())
-          print("primary placeholders:",n,s)
-          PY
+          cp data/phase6/nifty/nifty_*.csv data/processed/phase6/nifty/scenarios/
+          cp data/phase6/sensex/sensex_*.csv data/processed/phase6/sensex/scenarios/
+          cp data/processed/phase6/nifty/scenarios/nifty_w756_p5000.csv data/processed/phase6/nifty/primary.csv
+          cp data/processed/phase6/sensex/scenarios/sensex_w756_p5000.csv data/processed/phase6/sensex/primary.csv
       - name: Robustness analysis
         run: |
           python -m src.analysis.robustness --index NIFTY --primary data/processed/phase6/nifty/primary.csv --scenario-dir data/processed/phase6/nifty/scenarios --output-dir data/processed/phase6/nifty/analysis
