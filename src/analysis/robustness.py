@@ -164,7 +164,8 @@ def attach_regimes(df: pd.DataFrame, context: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     out["signal_date_dt"] = pd.to_datetime(out["signal_date"]).dt.normalize().astype("datetime64[ns]")
     ctx = context.reset_index().rename(columns={"index":"date"})
-    ctx["date"] = pd.to_datetime(ctx["date"]).dt.normalize().astype("datetime64[ns]")\n    ctx = ctx.sort_values("date")
+    ctx["date"] = pd.to_datetime(ctx["date"]).dt.normalize().astype("datetime64[ns]")
+    ctx = ctx.sort_values("date")
     out = pd.merge_asof(
         out.sort_values("signal_date_dt"),
         ctx.sort_values("date"),
