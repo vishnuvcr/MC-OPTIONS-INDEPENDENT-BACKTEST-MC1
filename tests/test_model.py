@@ -71,3 +71,9 @@ def test_enhanced_cost_model_positive_for_entry_friction():
     assert out["sebi_turnover"] > 0
     assert out["stamp_duty"] > 0
     assert out["gst_on_brokerage_and_venue_fees"] > 0
+
+
+def test_entry_stt_uses_execution_date():
+    from src.model.costs import stt_sale_rate
+    assert stt_sale_rate(pd.Timestamp("2026-03-31")) == 0.001
+    assert stt_sale_rate(pd.Timestamp("2026-04-01")) == 0.0015
