@@ -1,0 +1,9 @@
+metric,value
+nifty_trades,63
+sensex_trades,61
+mean_net_nifty,1183.6578
+mean_net_sensex,2507.5265
+mean_difference_nifty_minus_sensex,-1323.8687
+difference_ci95_low,-5194.2644
+difference_ci95_high,2513.4939
+median_difference,-1168.9443

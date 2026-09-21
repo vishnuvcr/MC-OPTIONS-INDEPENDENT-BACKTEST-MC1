@@ -15,3 +15,7 @@ This file records the substantive user requests, decisions, and research actions
 - User replied "Ok proceed further" and requested autonomous continuation of the research.
 - Phase 6 robustness branch was created after re-reading the governing protocol, locked strategy, data/cost schedules, phase logs, and NIFTY/SENSEX results.
 - Robustness dimensions were fixed before execution: bootstrap windows 504/756/1008, MC paths 1,000/5,000/10,000, slippage 0/1/2/3/5 points, extra-cost stress, and prior-day market-regime context.
+
+## 2026-09-21 — Final manuscript phase
+- User approved continuation after Phase 6 infrastructure delays.
+- Phase 7 manuscript package completed with final results, robustness interpretation, figures, tables, supplement, references and explicit remaining calibration-sensitivity limitation.
