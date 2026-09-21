@@ -62,3 +62,10 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - Leakage test confirms post-signal observations are excluded from the 756-session bootstrap input.
 - Execution test confirms strict post-09:30 common-timestamp selection.
 - Strike mapping uniqueness, 5,000 MC path count, strategy rule text, and historical-lot-size safeguards all passed.
+
+## Phase 4 NIFTY complete (2026-09-21)
+
+- Dedicated NIFTY workflow run 3 completed successfully.
+- Executed trades: 63; coverage through 2026-07-21.
+- Mean net P&L: Rs 1,183.66 per executed trade.
+- Net ES95: Rs -30,889.80; ES99: Rs -38,992.43.
