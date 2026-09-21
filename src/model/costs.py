@@ -63,3 +63,43 @@ def expiry_stt(
             intrinsic = max(settlement_spot - strikes[label], 0.0)
         stt += rate * q * intrinsic * lot_size
     return stt
+
+
+def exchange_transaction_rate_per_crore(underlying: str, trade_date: pd.Timestamp) -> float:
+    d = pd.Timestamp(trade_date).date()
+    if d < pd.Timestamp("2024-10-01").date():
+        raise ValueError("enhanced exchange transaction schedule is not defined before 2024-10-01")
+    if underlying == "NIFTY":
+        return 3553.0
+    if underlying == "SENSEX":
+        return 3250.0
+    raise ValueError(underlying)
+
+
+def enhanced_entry_costs(
+    underlying: str,
+    prices: dict[str, float],
+    quantities: dict[str, int],
+    lot_size: int,
+    trade_date: pd.Timestamp,
+    brokerage_override: float | None = None,
+) -> dict[str, float]:
+    brokerage_rate = brokerage_per_order(trade_date) if brokerage_override is None else float(brokerage_override)
+    brokerage = 4.0 * brokerage_rate
+    premium_turnover = sum(abs(q) * abs(float(prices[label])) * lot_size for label, q in quantities.items())
+    exchange_txn = exchange_transaction_rate_per_crore(underlying, trade_date) / 1e7 * premium_turnover
+    sebi = 0.000001 * premium_turnover
+    stamp = 0.00003 * sum(max(q, 0) * abs(float(prices[label])) * lot_size for label, q in quantities.items())
+    gst = 0.18 * (brokerage + exchange_txn + sebi)
+    return {
+        "brokerage": brokerage,
+        "stt_entry": sum(
+            stt_sale_rate(trade_date) * abs(q) * abs(float(prices[label])) * lot_size
+            for label, q in quantities.items() if q < 0
+        ),
+        "exchange_transaction": exchange_txn,
+        "sebi_turnover": sebi,
+        "stamp_duty": stamp,
+        "gst_on_brokerage_and_venue_fees": gst,
+        "total_enhanced_entry_cost": brokerage + exchange_txn + sebi + stamp + gst,
+    }
