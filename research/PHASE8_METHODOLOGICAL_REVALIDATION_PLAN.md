@@ -25,4 +25,4 @@ External scientific review identified methodological-framing and validation gaps
 - Manuscript distinguishes sample evidence from independent out-of-sample evidence.
 
 ## Status
-In progress — implementation complete; remote Phase 8 validation workflow triggered by branch push.
+In progress — first remote run caught and resolved a legacy test-interface failure; numerical validation remains blocked until the corrected workflow passes.
