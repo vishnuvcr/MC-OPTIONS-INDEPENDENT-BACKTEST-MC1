@@ -83,3 +83,13 @@ The next research phase should be a prospective frozen validation: no retuning, 
 - Error log: `research/logs/ERROR_LOG.md`
 - Research log: `research/logs/RESEARCH_LOG.md`
 - Full manuscript: `research/manuscript/NIFTY_BATMAN_MANUSCRIPT.md`
+
+## Phase 9 — Capital and return interpretation
+
+Phase 9 translates the Phase 8 primary trade results into capital-aware quantities without changing the strategy. NIFTY mean net P&L is ₹966.46 per trade against an ES95 loss proxy of ₹31,753.75; the observed maximum drawdown is ₹61,576.41 and the observed maximum simultaneous position count is two. The resulting conservative research capital proxy is ₹63,507.51. SENSEX mean net P&L is ₹2,508.06 per trade against ES95 of ₹26,807.30; observed maximum drawdown is ₹66,886.42 and maximum simultaneous count is two, giving a conservative research capital proxy of ₹66,886.42.
+
+Using one-position ES95 as denominator, mean P&L/ES95 is 3.04% for NIFTY and 9.36% for SENSEX. Using the more conservative capital proxy, the per-trade ratios are 1.52% and 3.75%. These are risk-capital ratios, not returns on broker margin. The simple linear annualized ratios of 53.96% and 129.93% are turnover-normalized historical calculations, not compounded forecasts.
+
+Average net entry premium cashflow is a credit of ₹2,957.76 for NIFTY and ₹4,686.03 for SENSEX, but this does not eliminate capital requirements because the short options require exchange-defined margin.
+
+Actual historical Paytm Money/NSE/BSE margin is not reconstructed here because the Phase 8 trade files do not contain date-specific SPAN risk arrays, exposure-margin parameters, or broker margin snapshots. See `research/PHASE9_RESULTS.md` and `research/data/PHASE9_CAPITAL_MARGIN_SOURCE_AUDIT.md`.
