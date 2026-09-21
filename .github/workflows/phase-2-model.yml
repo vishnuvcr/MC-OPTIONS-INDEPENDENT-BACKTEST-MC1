@@ -72,3 +72,5 @@ jobs:
           path: |
             data/processed/phase2/
             data_revision.txt
+
+# Fresh validation run after gate/timestamp fixes
