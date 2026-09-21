@@ -42,7 +42,7 @@ Primary questions:
 | 3 | phase-3-validation | Unit tests, invariants, leakage checks, synthetic tests | Complete |
 | 4 | phase-4-nifty | Full NIFTY backtest and diagnostics | Complete |
 | 5 | phase-5-sensex | Full SENSEX backtest and diagnostics | Complete |
-| 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | In progress |
+| 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
 | 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Planned |
 
 ## Data principles
@@ -68,7 +68,7 @@ Every phase has its own branch and a manually runnable GitHub Actions workflow. 
 
 ## Status
 
-Phase 0-5 are complete. Phase 6 is running the pre-specified robustness and cross-index analysis. The primary sample is currently 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024; Phase 6 is testing the stability of those results before the final manuscript.
+Phase 0-6 are complete*. The primary sample is 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. Phase 6 completed primary-trade robustness diagnostics and slippage stress; the raw-option MC window/path sensitivity matrix remains preserved as a manual follow-up because GitHub Actions runners were unavailable during execution.
 
 See:
 - [research protocol](research/RESEARCH_PROTOCOL.md)
@@ -79,3 +79,6 @@ See:
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
+
+
+*Infrastructure-constrained: see [Phase 6 robustness results](research/results/PHASE6_ROBUSTNESS_RESULTS.md).
