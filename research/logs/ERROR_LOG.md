@@ -20,3 +20,5 @@ No unresolved critical errors at Phase 0 start.
 | 2026-09-21 | 3 | Error | Phase 3 synthetic leakage fixture used 1,000 dates with an 800-point close vector. | Corrected the vector to 1,000 points; no production code change. | Resolved |
 
 | 2026-09-21 | 4 | Error | Phase 4 summary script had an unterminated string literal. | Replaced multiline literal assembly with an explicit report string. | Resolved |
+
+| 2026-09-21 | 6 | Tooling | Initial Phase 6 workflow write hit JS template interpolation on shell variables. | Rewrote the workflow using a literal line-array generator; no research-method change. | Resolved |
