@@ -114,3 +114,7 @@ Branch phase-8-methodological-revalidation was created. The locked strategy rule
 ## 2026-09-21 — Phase 8 first workflow validation result
 
 The first Phase 8 GitHub Actions run reached the test suite and correctly stopped before downloading market data. 15 tests passed and one legacy validation test failed because the execution function was extended from a 2-tuple to a 3-tuple carrying execution volumes. The test was updated to match the new audited return shape. No numerical backtest result was accepted from the failed run.
+
+## 2026-09-21 — Phase 8 lot-size correction
+
+Official NSE cohort dates showed that the earlier fallback schedule was too coarse. The fallback was corrected to NIFTY 25 before 20-Nov-2024, 75 for contracts from 20-Nov-2024 through 05-Jan-2026, and 65 from 06-Jan-2026 onward. Because the pinned intraday dataset has no lot_size column, this corrected fallback remains the active provenance path for this raw-option dataset.
