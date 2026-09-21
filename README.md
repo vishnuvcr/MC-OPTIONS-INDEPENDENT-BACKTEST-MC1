@@ -44,7 +44,7 @@ Primary questions:
 | 5 | phase-5-sensex | Full SENSEX backtest and diagnostics | Complete |
 | 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
 | 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Complete* |
-| 8 | phase-8-methodological-revalidation | Correct development-history framing, leakage chronology audit, clustered uncertainty, full raw-option calibration, execution/capital/strike robustness | In progress |
+| 8 | phase-8-methodological-revalidation | Correct development-history framing, leakage chronology audit, clustered uncertainty, full raw-option calibration, execution/capital/strike robustness | Complete |
 
 ## Data principles
 
@@ -69,7 +69,7 @@ Every phase has its own branch and a manually runnable GitHub Actions workflow. 
 
 ## Status
 
-Phases 0-7 produced the locked-rule historical sample; Phase 8 methodological revalidation is now in progress. The validated primary sample remains 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. The final manuscript records the positive sample results, tail risk, execution sensitivity, and the infrastructure-constrained raw-option MC calibration sensitivity limitation.
+Phases 0-7 produced the original locked-rule historical sample. Phase 8 methodological revalidation is now complete on the pinned raw-option dataset. The current primary calibration remains common to both indices at **756 historical sessions × 5,000 MC paths**; the 18-scenario matrix is sensitivity analysis, not index-specific tuning. Phase 8 produced 63 NIFTY and 61 SENSEX executed trades in the primary scenario, with block-bootstrap mean-P&L intervals that include zero for both indices. NIFTY is materially calibration-sensitive; SENSEX remains positive across all nine tested calibration settings. No independent future-profitability claim is made.
 
 See:
 - [research protocol](research/RESEARCH_PROTOCOL.md)
@@ -84,6 +84,7 @@ See:
 - [Figures and charts](research/manuscript/FIGURES.md)
 - [Manuscript tables](research/manuscript/tables/PRIMARY_STATS.csv)
 - [Phase 8 methodological revalidation plan](research/PHASE8_METHODOLOGICAL_REVALIDATION_PLAN.md)
+- [Phase 8 results](research/PHASE8_RESULTS.md)
 - [BATMAN development history](research/DEVELOPMENT_HISTORY.md)
 - [Prospective frozen validation protocol](research/PROSPECTIVE_FROZEN_VALIDATION_PROTOCOL.md)
 - [Phase 8 contract and cost source audit](research/data/PHASE8_CONTRACT_COST_SOURCE_AUDIT.md)
@@ -93,4 +94,4 @@ See:
 
 
 ### Phase 8 status
-Phase 7 remains the numerical baseline, but its claims of pre-specification/no parameter search are amended. Earlier BATMAN development included joint tuning, so the 63/61-trade sample is not called independently out-of-sample without a genuine unseen split. Phase 8 is the corrective validation phase and does not change the locked strategy. Implementation is complete; the final single-runner validation workflow remains queued because GitHub-hosted runner capacity has not been assigned. This is the Phase 8 infrastructure stop condition. No Phase 8 numerical output has been promoted to the manuscript.
+Phase 8 is complete. The locked strategy is unchanged. The full raw-option calibration matrix (3 windows × 3 path counts × 2 indices = 18 scenarios) executed successfully in authoritative GitHub Actions run `35641908887`. The primary research calibration remains **756 × 5,000 for both NIFTY and SENSEX**. No different index-specific settings are selected from the historical sensitivity table because that would be post hoc tuning. See `research/PHASE8_RESULTS.md` for the audited numerical results.
