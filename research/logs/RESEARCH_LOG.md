@@ -76,3 +76,12 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - Executed trades: 61; coverage through 2026-07-16.
 - Mean net P&L: Rs 2,507.53 per executed trade.
 - Net ES95: Rs -26,807.30; ES99: Rs -38,352.77.
+
+## Phase 6 complete with infrastructure constraint (2026-09-21)
+
+- Primary-trade bootstrap confidence intervals, cost attribution, slippage stress, yearly stability, and cross-index bootstrap comparison were completed from the validated Phase 2 artifact.
+- NIFTY mean net P&L: Rs 1,183.66; SENSEX mean net P&L: Rs 2,507.53.
+- 95% bootstrap mean intervals include zero for both indices.
+- Slippage stress to 5 points/leg leaves NIFTY approximately flat in sample mean and SENSEX positive.
+- The raw-option MC calibration matrix (504/756/1008 windows × 1,000/5,000/10,000 paths) remains implemented in the manual Phase 6 workflow but was not executed because the GitHub Actions runner queue remained unavailable.
+- Phase 6 is therefore marked complete with an explicit infrastructure limitation, and Phase 7 proceeds with that limitation as a manuscript item.
