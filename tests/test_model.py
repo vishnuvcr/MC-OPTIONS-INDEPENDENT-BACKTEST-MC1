@@ -47,3 +47,33 @@ def test_first_executable_common_timestamp():
     out=first_executable(x,pd.Timestamp("2026-01-01 09:30:00+05:30"),{"P20_PE":95,"P35_PE":100,"P65_CE":105,"P80_CE":110})
     assert out is not None
     assert str(out[0])[:16]=="2026-01-01 09:31"
+
+
+def test_nifty_lot_size_cohort_dates():
+    from src.model.engine import lot_size
+    assert lot_size("NIFTY", pd.Timestamp("2024-11-14")) == 25
+    assert lot_size("NIFTY", pd.Timestamp("2024-11-21")) == 75
+    assert lot_size("NIFTY", pd.Timestamp("2025-12-30")) == 75
+    assert lot_size("NIFTY", pd.Timestamp("2026-01-06")) == 65
+
+
+def test_enhanced_cost_model_positive_for_entry_friction():
+    from src.model.costs import enhanced_entry_costs
+    out=enhanced_entry_costs(
+        "NIFTY",
+        {"P35_PE":100.0,"P20_PE":50.0,"P65_CE":100.0,"P80_CE":50.0},
+        {"P35_PE":1,"P20_PE":-2,"P65_CE":1,"P80_CE":-2},
+        75,
+        pd.Timestamp("2025-01-02"),
+    )
+    assert out["total_enhanced_entry_cost"] > out["brokerage"]
+    assert out["exchange_transaction"] > 0
+    assert out["sebi_turnover"] > 0
+    assert out["stamp_duty"] > 0
+    assert out["gst_on_brokerage_and_venue_fees"] > 0
+
+
+def test_entry_stt_uses_execution_date():
+    from src.model.costs import stt_sale_rate
+    assert stt_sale_rate(pd.Timestamp("2026-03-31")) == 0.001
+    assert stt_sale_rate(pd.Timestamp("2026-04-01")) == 0.0015
