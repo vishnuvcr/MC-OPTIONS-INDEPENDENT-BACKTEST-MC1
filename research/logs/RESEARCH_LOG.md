@@ -126,3 +126,7 @@ A cost-date audit found that entry STT was keyed to expiry rather than actual ex
 ## 2026-09-22 — Phase 8 execution bottleneck correction
 
 The monitoring UI disconnected while GitHub Actions was being polled, and the authoritative workflow was queued. The Phase 8 workflow previously requested two simultaneous hosted runners. It was consolidated to a single ubuntu-24.04 job executing both index matrices sequentially. This preserves the full 18-scenario design while reducing runner requirements and avoiding a two-runner scheduling bottleneck.
+
+## 2026-09-22 — Phase 8 local validation attempt
+
+A local clone/pytest attempt was blocked because the execution container could not resolve github.com. Therefore no local numerical output is accepted; GitHub Actions remains the authoritative reproducibility path.
