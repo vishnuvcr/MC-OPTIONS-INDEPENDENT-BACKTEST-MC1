@@ -43,6 +43,18 @@ jobs:
               src=hf_hub_download("rissin/nse-options-intraday",filename=f"upstox_intraday/NIFTY/NIFTY_{y}.parquet",repo_type="dataset",revision=rev)
               shutil.copy2(src,Path("data/raw/hf/NIFTY")/f"NIFTY_{y}.parquet")
           PY
+      - name: Audit NIFTY raw schema
+        run: |
+          python - <<'PY'
+          import pyarrow.parquet as pq
+          from pathlib import Path
+          p=Path("data/raw/hf/NIFTY/NIFTY_2024.parquet")
+          cols=pq.read_schema(p).names
+          expected={"date","timestamp","underlying","expiry","strike","option_type","exercise_style","open","high","low","close","volume","oi","settle_price","source","granularity"}
+          assert set(cols)==expected, (cols, sorted(expected-set(cols)), sorted(set(cols)-expected))
+          assert "lot_size" not in cols
+          print("NIFTY schema OK; lot_size absent as expected")
+          PY
       - name: Run full 9-scenario NIFTY raw-option matrix
         env:
           YEARS: ${{ inputs.years || '2024,2025,2026' }}
@@ -86,6 +98,18 @@ jobs:
           for y in (2024,2025,2026):
               src=hf_hub_download("rissin/nse-options-intraday",filename=f"upstox_intraday/SENSEX/SENSEX_{y}.parquet",repo_type="dataset",revision=rev)
               shutil.copy2(src,Path("data/raw/hf/SENSEX")/f"SENSEX_{y}.parquet")
+          PY
+      - name: Audit SENSEX raw schema
+        run: |
+          python - <<'PY'
+          import pyarrow.parquet as pq
+          from pathlib import Path
+          p=Path("data/raw/hf/SENSEX/SENSEX_2024.parquet")
+          cols=pq.read_schema(p).names
+          expected={"date","timestamp","underlying","expiry","strike","option_type","exercise_style","open","high","low","close","volume","oi","settle_price","source","granularity"}
+          assert set(cols)==expected, (cols, sorted(expected-set(cols)), sorted(set(cols)-expected))
+          assert "lot_size" not in cols
+          print("SENSEX schema OK; lot_size absent as expected")
           PY
       - name: Run full 9-scenario SENSEX raw-option matrix
         env:
