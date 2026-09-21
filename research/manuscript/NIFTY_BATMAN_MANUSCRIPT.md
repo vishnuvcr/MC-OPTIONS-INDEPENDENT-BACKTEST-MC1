@@ -22,7 +22,7 @@ The evidence therefore establishes a reproducible positive-sample result under t
 
 Index-option strategies can show attractive in-sample economics while failing after execution costs, structural market changes, or tail losses. Recent NIFTY option research similarly emphasizes the gap between theoretical volatility premia and tradeability after implementation frictions and extreme events [1,2].
 
-This study addresses that problem with a locked, chronology-preserving strategy specification and an explicit cost model. The objective is not to optimize the rule to the historical sample. The rule was fixed before the final NIFTY/SENSEX performance analysis.
+This study addresses that problem with a locked, chronology-preserving strategy specification and an explicit cost model. The objective of the present locked-rule analysis is not to introduce additional optimization. However, the broader BATMAN research lineage included joint tuning of entry day, entry timing and exit methodology before the final specification was frozen. Accordingly, the existing 63/61-trade results are historical locked-rule results following research-stage selection; they are not described here as independent out-of-sample validation unless a genuinely unseen validation period is demonstrated.
 
 The selected public option dataset describes a 1-minute intraday track covering NIFTY, BANKNIFTY and SENSEX from October 2024 through 2026, assembled from Upstox historical API candles, with daily history derived from NSE F&O bhavcopy. [3] NSE also maintains historical contract-wise price/volume data, F&O bhavcopy/UDiFF reports, settlement data, India VIX history, participant-wise derivatives reports and FII derivatives statistics. [4,5]
 
@@ -67,7 +67,7 @@ The strategy definition is immutable:
 | Costs | Brokerage + STT + historical lot size |
 | Sizing | ES95/ES99 risk proxy |
 
-No parameter search was performed.
+No additional parameter search was performed in the locked-rule implementation. Earlier development/tuning is disclosed above and is treated as part of the strategy-development phase.
 
 ---
 
@@ -137,7 +137,7 @@ Terminal P20/P35/P65/P80 quantiles are mapped to the nearest unique available st
 
 ### 5.6 MC-EV gate
 
-For each terminal path, the four-leg expiry payoff is calculated. Gross MC-EV is the average terminal portfolio payoff minus the observed entry premium cash flow, before execution slippage and transaction costs.
+For each terminal path, the four-leg expiry payoff is calculated. Gross MC-EV is the average terminal portfolio payoff minus the signal-time entry premium available from the 09:30 information set, before execution slippage and transaction costs. The later first-common-executable price is not permitted to determine whether the gate passes. Phase 8 adds a trade-level timestamp audit for this ordering.
 
 Only positive gross MC-EV observations are eligible for execution.
 
@@ -149,7 +149,7 @@ Exit occurs at contract expiry using the historical index settlement observation
 
 ### 5.8 Costs
 
-Primary net P&L includes:
+The 2-point-per-leg assumption is a research stress assumption, not a validated estimate of four-leg market impact or simultaneous fill quality. Primary net P&L includes:
 - 2 option points adverse slippage for each of four entry legs;
 - ₹20 brokerage per entry order;
 - date-effective STT;
@@ -236,6 +236,8 @@ These tests do not provide evidence of a precisely estimated positive mean at co
 ---
 
 ## 8. Slippage and Cost Sensitivity
+
+The observed slippage stress should not be interpreted as proof of real executable fills. A four-leg basket can experience leg-by-leg timing, spread, queue and stale-quote effects. Phase 8 therefore treats fixed point slippage as a sensitivity parameter and adds bid/ask/fill analysis where source data permit.
 
 ### 8.1 Slippage stress
 
@@ -521,3 +523,32 @@ Lock all parameters and evaluate unseen future expiries without re-estimation.
 - Error log: `research/logs/ERROR_LOG.md`
 - Research log: `research/logs/RESEARCH_LOG.md`
 - Phase 6 workflow: `.github/workflows/phase-6-robustness.yml`
+
+
+---
+
+## 15. Methodological Revalidation Amendment
+
+### 15.1 Development versus validation
+
+The research history is separated into strategy-development/tuning, locked-rule specification, historical locked-rule evaluation, and prospective or genuinely unseen validation if a clean date split is available. The existing 63 NIFTY and 61 SENSEX observations remain descriptive outputs of the locked implementation, but are not represented as independently out-of-sample evidence if those observations were available during development.
+
+### 15.2 MC-EV chronology audit
+
+The gate must use a premium identified at the signal information cut-off. The later execution premium may affect realized P&L but cannot retroactively determine trade eligibility. The final audit record will contain signal timestamp, gate-premium timestamp, gate premium, execution timestamp, execution premium, and MC-EV before execution friction.
+
+### 15.3 Dependence-aware inference
+
+The existing iid trade-bootstrap interval remains a descriptive uncertainty measure. Phase 8 adds expiry-cluster/block bootstrap intervals to preserve temporal dependence and regime clustering. NIFTY/SENSEX differences will additionally be paired by comparable dates where possible.
+
+### 15.4 Strike mapping and capital
+
+Phase 8 will quantify exact-target versus displaced strike mappings, collision frequency, displacement in index points, payoff shape, margin/capital requirement, and ES-based sizing. The present ES95/ES99 risk proxy is not treated as a complete capital model until those quantities are explicitly calculated.
+
+### 15.5 Coverage dates
+
+The 2026 results are coverage-to-date for the available intraday dataset, not full calendar-year results through 21 September 2026. The available NIFTY and SENSEX samples currently end in July 2026.
+
+### 15.6 Raw-option calibration matrix
+
+The required 504/756/1008 × 1,000/5,000/10,000 scenarios must rerun the full raw-option chain: MC distribution, terminal quantiles, strike mapping, MC-EV gate, trade selection, execution and expiry P&L. A final robustness claim will not substitute perturbations of the already-selected trade list.
