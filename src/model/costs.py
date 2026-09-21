@@ -101,5 +101,5 @@ def enhanced_entry_costs(
         "sebi_turnover": sebi,
         "stamp_duty": stamp,
         "gst_on_brokerage_and_venue_fees": gst,
-        "total_enhanced_entry_cost": brokerage + exchange_txn + sebi + stamp + gst,
+        "total_enhanced_entry_cost": brokerage + exchange_txn + sebi + stamp + gst + sum(stt_sale_rate(trade_date) * abs(q) * abs(float(prices[label])) * lot_size for label, q in quantities.items() if q < 0),
     }
