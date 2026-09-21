@@ -34,3 +34,16 @@ Earlier 2024 budget material records the prior option-sale STT change to 0.10%, 
 ## Raw option dataset schema audit
 
 The pinned Hugging Face dataset's intraday schema has 16 columns and does not include a lot_size field. Therefore the Phase 8 engine cannot use a contract-level lot-size field from this dataset. The corrected fallback schedule is now driven by the official NSE cohort dates rather than the earlier expiry-date thresholds.
+
+
+## Enhanced statutory/venue cost model inputs
+
+For the October 2024–July 2026 sample:
+- NSE equity-option transaction/venue outflow is modeled at ₹3,553 per crore of premium turnover. NSE's February 2026 circular states the revised total outflow remains ₹3,553 per crore, effective 1-Mar-2026; the preceding 2024 schedule is treated as the same total for the sample period.
+- BSE SENSEX option transaction charges are ₹3,250 per crore of premium turnover from 1-Oct-2024.
+- SEBI turnover fee is 0.0001% (₹10 per crore) on equity-derivatives turnover.
+- Stamp duty on equity options is 0.003% on the buyer.
+- GST is 18% on broker/venue service fees in the enhanced model.
+- STT remains date-effective as already documented.
+
+The enhanced model is a separate robustness layer; it does not replace the locked primary friction model used for the historical headline results.
