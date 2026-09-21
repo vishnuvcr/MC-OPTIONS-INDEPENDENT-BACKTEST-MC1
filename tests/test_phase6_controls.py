@@ -29,3 +29,18 @@ def test_primary_mc_seed_is_deterministic():
     a = mc_terminal_paths(100.0, r, 4, seed=756, paths=5000, bootstrap_window=756)
     b = mc_terminal_paths(100.0, r, 4, seed=756, paths=5000, bootstrap_window=756)
     assert np.array_equal(a, b)
+
+
+def test_regime_join_normalizes_datetime_resolution():
+    from src.analysis.robustness import attach_regimes
+    trades = pd.DataFrame({
+        "signal_date": ["2025-01-02", "2025-02-03"],
+        "net_realized_rupees": [100.0, -50.0],
+    })
+    context = pd.DataFrame(
+        {"india_vix": [12.0, 18.0], "sp500_ret": [0.01, -0.02]},
+        index=pd.to_datetime(["2025-01-01", "2025-02-01"]).astype("datetime64[s]"),
+    )
+    out = attach_regimes(trades, context)
+    assert len(out) == 2
+    assert "india_vix_regime" in out.columns
