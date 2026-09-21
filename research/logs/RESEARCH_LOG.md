@@ -153,3 +153,12 @@ The consolidated Phase 8 workflow was reduced to one job and moved to an alterna
 - Gate chronology and execution-volume audits passed at 100% in the primary scenario; final strike uniqueness was 100%, with non-zero strike displacement from theoretical quantiles.
 - Paired NIFTY/SENSEX analysis had only one common signal date and therefore did not support paired inference.
 - Full results and calibration matrix are recorded in research/PHASE8_RESULTS.md.
+
+
+## 2026-09-22 — Phase 8 interpretation lock
+
+- The raw-option 18-scenario revalidation is complete and is now the authoritative methodological robustness result.
+- The primary calibration remains common across NIFTY and SENSEX at 756 historical sessions × 5,000 MC paths.
+- The 18-scenario matrix is treated as sensitivity/revalidation only. No index-specific setting is selected from the same historical sample because that would be post hoc tuning.
+- NIFTY shows materially greater calibration sensitivity than SENSEX; SENSEX remains positive across all nine tested settings.
+- Future instrument-specific calibration, if studied, must use a pre-registered selection rule and genuinely unseen validation expiries.
