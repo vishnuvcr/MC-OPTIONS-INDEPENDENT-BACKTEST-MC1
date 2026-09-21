@@ -25,4 +25,4 @@ External scientific review identified methodological-framing and validation gaps
 - Manuscript distinguishes sample evidence from independent out-of-sample evidence.
 
 ## Status
-**Blocked by GitHub-hosted runner capacity.** Implementation and validation controls are complete, but the authoritative single-runner workflow remains queued (run 102). No Phase 8 numerical result is accepted until that run executes. This is an infrastructure stop condition, not a model-result conclusion.
+**Active — authoritative numerical revalidation is executing.** Run `35641908887` has started successfully on the single hosted runner. Setup, tests, pinned dataset download, and raw-schema audit have passed; the NIFTY 18-scenario raw-option matrix is currently executing. No Phase 8 numerical result is accepted until the full chain and audits complete.
