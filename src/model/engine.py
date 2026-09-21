@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 
-from src.model.costs import entry_costs, entry_slipped_price, expiry_stt
+from src.model.costs import entry_costs, entry_slipped_price, expiry_stt, enhanced_entry_costs
 from src.model.mc import gross_mc_ev, historical_log_returns, select_strikes, simulate
 from src.model.strategy import LEGS, expiry_sessions, signal_spot_from_parity
 from src.model.execution import first_executable
@@ -156,6 +156,9 @@ def run_trade(
     displacement = {k: float(strikes[k]) - float(qtargets[k]) for k in strikes}
     costs=entry_costs(slipped,qty,lot,expiry)
     costs["stt_expiry"]=expiry_stt(expiry,settle,strikes,qty,lot)
+    enhanced=enhanced_entry_costs(underlying,slipped,qty,lot,expiry)
+    enhanced["stt_expiry"]=costs["stt_expiry"]
+    enhanced_extra = enhanced["exchange_transaction"] + enhanced["sebi_turnover"] + enhanced["stamp_duty"] + enhanced["gst_on_brokerage_and_venue_fees"]
     return {
         "underlying":underlying,
         "expiry":str(expiry.date()),
