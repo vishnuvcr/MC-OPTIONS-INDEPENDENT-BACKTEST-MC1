@@ -15,6 +15,8 @@ def _executed(path: Path) -> pd.DataFrame:
     x["expiry"] = pd.to_datetime(x["expiry"])
     x["signal_date"] = pd.to_datetime(x["signal_date"])
     x["net_realized_rupees"] = pd.to_numeric(x["net_realized_rupees"], errors="coerce")
+    if "net_realized_rupees_enhanced_friction" in x.columns:
+        x["net_realized_rupees_enhanced_friction"] = pd.to_numeric(x["net_realized_rupees_enhanced_friction"], errors="coerce")
     return x.dropna(subset=["net_realized_rupees"]).sort_values("expiry").reset_index(drop=True)
 
 
@@ -170,6 +172,8 @@ def write_index(index: str, path: Path, outdir: Path):
         "index":index,
         "trades":len(df),
         "mean_net":float(df["net_realized_rupees"].mean()),
+        "mean_net_enhanced_friction":float(df["net_realized_rupees_enhanced_friction"].mean()) if "net_realized_rupees_enhanced_friction" in df else float("nan"),
+        "enhanced_friction_extra_mean_rupees":float(df["enhanced_extra_entry_friction_rupees"].mean()) if "enhanced_extra_entry_friction_rupees" in df else float("nan"),
         "block_bootstrap_ci95_low":lo,
         "block_bootstrap_ci95_high":hi,
         "exact_all_four_share":float(sm["exact_all_four"].mean()),
