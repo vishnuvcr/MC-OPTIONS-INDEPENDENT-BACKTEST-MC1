@@ -40,7 +40,7 @@ def test_execution_is_strictly_after_signal_and_common_timestamp():
     x=pd.DataFrame(rows)
     out=first_executable(x,signal,strikes)
     assert out is not None
-    ts, prices=out
+    ts, prices, volumes=out
     assert ts == pd.Timestamp("2024-01-02 09:31:00")
     assert all(v==11.0 for v in prices.values())
 
