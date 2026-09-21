@@ -100,4 +100,4 @@ This phase may state risk-capital proxies and cash requirements, but it must not
 - README and final conclusion are updated after successful workflow validation.
 
 ## Status
-Implementation created; numerical results are accepted only from the Phase 9 GitHub Actions run.
+Implementation complete; numerical results are provisionally computed from the immutable Phase 8 artifact. Final status is pending GitHub Actions validation of the Phase 9 analysis code.
