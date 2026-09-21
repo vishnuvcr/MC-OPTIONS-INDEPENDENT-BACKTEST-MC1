@@ -107,13 +107,15 @@ def run_trade(underlying: str, path: Path, daily: pd.DataFrame, expiry: pd.Times
     terminals=simulate(s0,returns,len(sessions)-1)
     qtargets,strikes=select_strikes(terminals,snap)
     sig_prices=signal_prices(snap,strikes)
+    ev=gross_mc_ev(terminals,strikes,sig_prices)
+    if ev <= 0:
+        return None,"mc_ev_gate_fail"
     ex=first_executable(window,signal_ts,strikes)
     if ex is None:
         return None,"missing_common_execution"
     exec_ts,raw=ex
     qty={x.label:x.quantity for x in LEGS}
     slipped={k:entry_slipped_price(v,qty[k],2.0) for k,v in raw.items()}
-    ev=gross_mc_ev(terminals,strikes,sig_prices)
     settle=float(daily.loc[daily["date"]==expiry,"close"].iloc[0])
     gross_pts=0.0
     net_pts=0.0
