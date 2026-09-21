@@ -23,3 +23,22 @@ The primary research will not assume a constant current expiry weekday or lot si
 
 ### Next phase
 Phase 1: acquire and validate reproducible historical option and underlying data and write a source/version manifest.
+
+
+## 2026-09-21 — Phase 1 data start
+
+- Phase 1 branch created.
+- Public Hugging Face option dataset selected as the primary intraday source for 1-minute NIFTY/SENSEX option observations.
+- Daily NIFTY/SENSEX underlying history is acquired via yfinance as a secondary source for the 756-session bootstrap history.
+- Historical lot-size and expiry changes are explicitly recorded instead of assuming current contract specifications.
+- A manual and pull-request GitHub Actions workflow was added for reproducible acquisition, cache, QA, and artifact publication.
+- Phase 1 data QA is pending the first workflow execution.
+
+
+## Phase 1 QA result (2026-09-21)
+
+- GitHub Actions run 3 completed successfully.
+- Dataset revision: 8f7739cab3f38abdcbc6332a6d0a83e1341326e3.
+- 2024 NIFTY and SENSEX option parquet files downloaded and passed structural QA.
+- NIFTY and SENSEX daily index histories passed the 756-session minimum check.
+- Phase 1 artifact upload completed successfully.

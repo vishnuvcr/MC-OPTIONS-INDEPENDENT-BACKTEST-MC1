@@ -1,0 +1,102 @@
+name: Phase 1 - Data acquisition and QA
+
+on:
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Option years, comma-separated"
+        required: true
+        default: "2024"
+      full:
+        description: "Use 2024,2025,2026"
+        required: true
+        type: boolean
+        default: false
+  pull_request:
+    branches: [main]
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow yfinance huggingface_hub
+
+      - name: Select years
+        id: yrs
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.full }}" = "true" ]; then
+            echo "years=2024,2025,2026" >> "$GITHUB_OUTPUT"
+          else
+            echo "years=${{ inputs.years || '2024' }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve dataset revision
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          u="https://huggingface.co/api/datasets/rissin/nse-options-intraday/revision/main"
+          with urllib.request.urlopen(u, timeout=60) as r:
+              x=json.load(r)
+          open("data_revision.txt","w").write(x.get("sha","unknown"))
+          print(x.get("sha","unknown"))
+          PY
+
+      - name: Cache Hugging Face files
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nse-options-${{ hashFiles('data_revision.txt') }}-${{ steps.yrs.outputs.years }}
+
+      - name: Download option files
+        env:
+          YEARS: ${{ steps.yrs.outputs.years }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import shutil
+          from huggingface_hub import hf_hub_download
+          years=[int(x) for x in os.environ["YEARS"].split(",")]
+          for u in ("NIFTY","SENSEX"):
+              d=Path("data/raw/hf")/u
+              d.mkdir(parents=True, exist_ok=True)
+              for y in years:
+                  f=f"upstox_intraday/{u}/{u}_{y}.parquet"
+                  src=hf_hub_download("rissin/nse-options-intraday", filename=f, repo_type="dataset", revision=open("data_revision.txt").read().strip())
+                  dst=d/f"{u}_{y}.parquet"
+                  if dst.exists(): dst.unlink()
+                  shutil.copy2(src, dst)
+                  print(dst)
+          PY
+
+      - name: Data QA
+        env:
+          YEARS: ${{ steps.yrs.outputs.years }}
+        run: python -m src.data.phase1_manifest
+
+      - name: Save provenance
+        run: |
+          mkdir -p data/processed/phase1
+          {
+            echo "dataset=rissin/nse-options-intraday"
+            echo "revision=$(cat data_revision.txt)"
+            echo "option_source_track=upstox_intraday"
+            echo "underlying_daily_source=Yahoo Finance via yfinance"
+          } > data/processed/phase1/source_provenance.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase1-data-qa
+          path: |
+            data/processed/phase1
+            data_revision.txt
