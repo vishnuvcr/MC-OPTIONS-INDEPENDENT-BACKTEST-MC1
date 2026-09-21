@@ -47,3 +47,11 @@ def test_first_executable_common_timestamp():
     out=first_executable(x,pd.Timestamp("2026-01-01 09:30:00+05:30"),{"P20_PE":95,"P35_PE":100,"P65_CE":105,"P80_CE":110})
     assert out is not None
     assert str(out[0])[:16]=="2026-01-01 09:31"
+
+
+def test_nifty_lot_size_cohort_dates():
+    from src.model.engine import lot_size
+    assert lot_size("NIFTY", pd.Timestamp("2024-11-14")) == 25
+    assert lot_size("NIFTY", pd.Timestamp("2024-11-21")) == 75
+    assert lot_size("NIFTY", pd.Timestamp("2025-12-30")) == 75
+    assert lot_size("NIFTY", pd.Timestamp("2026-01-06")) == 65
