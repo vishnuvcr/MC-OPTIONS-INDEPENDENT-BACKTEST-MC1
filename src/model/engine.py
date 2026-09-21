@@ -127,7 +127,7 @@ def run_trade(
     ex=first_executable(window,signal_ts,strikes)
     if ex is None:
         return None,"missing_common_execution"
-    exec_ts,raw=ex
+    exec_ts,raw,raw_volume=ex
     qty={x.label:x.quantity for x in LEGS}
     slipped={k:entry_slipped_price(v,qty[k],slippage_points) for k,v in raw.items()}
     settle=float(daily.loc[daily["date"]==expiry,"close"].iloc[0])
@@ -138,6 +138,7 @@ def run_trade(
         gross_pts += leg.quantity*(intr-raw[leg.label])
         net_pts += leg.quantity*(intr-slipped[leg.label])
     lot=lot_size(underlying,expiry)
+    displacement = {k: float(strikes[k]) - float(qtargets[k]) for k in strikes}
     costs=entry_costs(slipped,qty,lot,expiry)
     costs["stt_expiry"]=expiry_stt(expiry,settle,strikes,qty,lot)
     return {
@@ -146,6 +147,8 @@ def run_trade(
         "signal_date":str(signal_date.date()),
         "signal_timestamp":str(signal_ts),
         "execution_timestamp":str(exec_ts),
+        "gate_premium_timestamp":str(signal_ts),
+        "gate_premium_source":"latest_common_option_snapshot_at_or_before_09:30_IST",
         "s0":s0,
         "s0_source":s0_source,
         "settlement_spot":settle,
@@ -154,8 +157,13 @@ def run_trade(
         "executed":True,
         "strikes":json.dumps(strikes,sort_keys=True),
         "quantile_targets":json.dumps(qtargets,sort_keys=True),
+        "strike_displacement_points":json.dumps(displacement,sort_keys=True),
+        "max_abs_strike_displacement_points":max(abs(v) for v in displacement.values()),
+        "mean_abs_strike_displacement_points":sum(abs(v) for v in displacement.values())/len(displacement),
+        "exact_strike_target_count":sum(abs(displacement[k]) < 1e-9 for k in displacement),
         "signal_prices":json.dumps(sig_prices,sort_keys=True),
         "execution_prices_raw":json.dumps(raw,sort_keys=True),
+        "execution_volume":json.dumps(raw_volume,sort_keys=True),
         "execution_prices_slipped":json.dumps(slipped,sort_keys=True),
         "lot_size":lot,
         "gross_realized_rupees":gross_pts*lot,
