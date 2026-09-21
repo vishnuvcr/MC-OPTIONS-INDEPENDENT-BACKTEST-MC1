@@ -88,8 +88,8 @@ def signal_prices(snapshot: pd.DataFrame, strikes: dict[str,float]) -> dict[str,
 def lot_size(underlying: str, expiry: pd.Timestamp) -> int:
     if underlying=="NIFTY":
         if expiry<pd.Timestamp("2024-05-01"): return 50
-        if expiry<pd.Timestamp("2025-01-02"): return 25
-        if expiry<pd.Timestamp("2025-12-25"): return 75
+        if expiry<pd.Timestamp("2024-11-20"): return 25
+        if expiry<pd.Timestamp("2026-01-06"): return 75
         return 65
     if underlying=="SENSEX":
         return 10 if expiry<pd.Timestamp("2024-11-20") else 20
