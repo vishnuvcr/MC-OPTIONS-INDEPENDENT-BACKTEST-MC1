@@ -1,0 +1,30 @@
+name: Phase 7 - Final manuscript
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - phase-7-manuscript
+
+jobs:
+  manuscript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate manuscript package
+        run: |
+          test -s research/manuscript/NIFTY_BATMAN_MANUSCRIPT.md
+          test -s research/manuscript/SUPPLEMENT.md
+          test -s research/manuscript/REFERENCES.md
+          test -s research/manuscript/FIGURES.md
+          test -s research/manuscript/tables/PRIMARY_STATS.csv
+          test -s research/manuscript/tables/SLIPPAGE_SENSITIVITY.csv
+          test -s research/manuscript/tables/YEARLY_RESULTS.csv
+          test -s research/manuscript/tables/CROSS_INDEX.csv
+          grep -F "756-session bootstrap MC, 5,000 paths" research/STRATEGY_SPEC.md
+          grep -F "2 option points per execution leg" research/STRATEGY_SPEC.md
+          grep -F "infrastructure-constrained" research/results/PHASE6_ROBUSTNESS_RESULTS.md
+          echo "Final manuscript package validation passed."
