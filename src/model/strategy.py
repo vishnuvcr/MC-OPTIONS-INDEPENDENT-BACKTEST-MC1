@@ -128,53 +128,44 @@ def signal_spot_from_parity(snapshot: pd.DataFrame, fallback: float) -> tuple[fl
 
 
 def execution_rows(option_window: pd.DataFrame, signal_time: pd.Timestamp, strikes: dict[str, float]):
-    rows = []
     x = option_window.copy()
     x["timestamp"] = pd.to_datetime(x["timestamp"], errors="coerce")
+    if x["timestamp"].dt.tz is None:
+        x["timestamp"] = x["timestamp"].dt.tz_localize("Asia/Kolkata")
+    else:
+        x["timestamp"] = x["timestamp"].dt.tz_convert("Asia/Kolkata")
+    signal_time = pd.Timestamp(signal_time)
+    if signal_time.tzinfo is None:
+        signal_time = signal_time.tz_localize("Asia/Kolkata")
+    else:
+        signal_time = signal_time.tz_convert("Asia/Kolkata")
+
+    x["strike"] = pd.to_numeric(x["strike"], errors="coerce")
+    x["close"] = pd.to_numeric(x["close"], errors="coerce")
+    if "volume" in x.columns:
+        x["volume"] = pd.to_numeric(x["volume"], errors="coerce")
+
+    eligible = []
     for leg in LEGS:
         sub = x[
             (x["option_type"] == leg.option_type)
-            & (pd.to_numeric(x["strike"], errors="coerce") == strikes[leg.label])
+            & (x["strike"] == float(strikes[leg.label]))
             & (x["timestamp"] > signal_time)
+            & (x["close"] > 0)
         ].copy()
-        sub["close"] = pd.to_numeric(sub["close"], errors="coerce")
-        if "volume" in sub:
-            sub["volume"] = pd.to_numeric(sub["volume"], errors="coerce")
-            sub = sub[(sub["close"] > 0) & ((sub["volume"] > 0) | sub["volume"].isna())]
-        else:
-            sub = sub[sub["close"] > 0]
+        if "volume" in sub.columns:
+            sub = sub[(sub["volume"] > 0) | sub["volume"].isna()]
+        sub = sub[["timestamp", "close"]].rename(columns={"close": leg.label})
         if sub.empty:
             return None
-        rows.append(sub[["timestamp", "close"]].assign(label=leg.label))
-    merged = rows[0]
-    for r in rows[1:]:
-        merged = merged.merge(r, on="timestamp", how="inner", suffixes=("", "_r"))
-    if merged.empty:
+        eligible.append(sub)
+
+    wide = eligible[0]
+    for sub in eligible[1:]:
+        wide = wide.merge(sub, on="timestamp", how="inner")
+    if wide.empty:
         return None
-    ts = merged["timestamp"].min()
-    prices = {}
-    for leg in LEGS:
-        col = "close" if leg.label == "P35_PE" else f"close_{leg.label}"
-    for leg in LEGS:
-        if leg.label == "P35_PE":
-            prices[leg.label] = float(merged.loc[merged.timestamp == ts, "close"].iloc[0])
-        else:
-            # Columns are created sequentially by pandas merge.
-            target = rows[0]
-            col = None
-            for c in merged.columns:
-                if c.startswith("close") and c != "close" and c.endswith(leg.label):
-                    col = c
-            if col is None:
-                # Fall back to explicit row lookup; robust to merge suffix differences.
-                rr = x[
-                    (x["timestamp"] == ts)
-                    & (x["option_type"] == leg.option_type)
-                    & (pd.to_numeric(x["strike"], errors="coerce") == strikes[leg.label])
-                ]
-                if rr.empty:
-                    return None
-                prices[leg.label] = float(rr["close"].iloc[0])
-            else:
-                prices[leg.label] = float(merged.loc[merged.timestamp == ts, col].iloc[0])
-    return ts, prices
+
+    wide = wide.sort_values("timestamp")
+    row = wide.iloc[0]
+    return row["timestamp"], {leg.label: float(row[leg.label]) for leg in LEGS}
