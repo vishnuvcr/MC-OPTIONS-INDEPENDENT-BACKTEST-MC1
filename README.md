@@ -93,4 +93,4 @@ See:
 
 
 ### Phase 8 status
-Phase 7 remains the numerical baseline, but its claims of pre-specification/no parameter search are amended. Earlier BATMAN development included joint tuning, so the 63/61-trade sample is not called independently out-of-sample without a genuine unseen split. Phase 8 is the corrective validation phase and does not change the locked strategy.
+Phase 7 remains the numerical baseline, but its claims of pre-specification/no parameter search are amended. Earlier BATMAN development included joint tuning, so the 63/61-trade sample is not called independently out-of-sample without a genuine unseen split. Phase 8 is the corrective validation phase and does not change the locked strategy. Implementation is complete; the final validation workflow is waiting for hosted-runner capacity. No Phase 8 numerical output has been promoted to the manuscript yet.
