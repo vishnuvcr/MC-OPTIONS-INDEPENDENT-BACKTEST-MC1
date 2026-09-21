@@ -1,4 +1,8 @@
-# Final Research Conclusion
+# Final Research Conclusion — Phase 8 Revalidation Amendment
+
+## Current status
+
+The Phase 7 numerical results remain preserved, but the manuscript's scientific framing is amended. They are locked-rule historical sample results following research-stage strategy development, not independent out-of-sample validation unless a genuinely unseen date split is demonstrated.
 
 ## Validated primary result
 
@@ -17,6 +21,10 @@ The strongest robustness result is execution sensitivity:
 ## Scientific conclusion
 
 The research establishes a reproducible positive sample outcome under the locked primary assumptions, with meaningful tail risk and material execution sensitivity. It does not establish production readiness or a durable future trading edge.
+
+## Required methodological revalidation
+
+Before the study is described as a final validation manuscript, complete: development-history audit; 09:30 MC-EV timestamp audit; expiry-cluster/block bootstrap; paired cross-index comparison; full raw-option MC calibration matrix; strike-mapping robustness; payoff/capital/margin analysis; and execution realism analysis.
 
 ## Outstanding future experiment
 
