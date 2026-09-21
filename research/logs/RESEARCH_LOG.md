@@ -185,3 +185,7 @@ User requested a capital and return interpretation for both NIFTY and SENSEX usi
 - SENSEX conservative research capital proxy: ₹66,886.42; mean P&L/conservative proxy: 3.75% per trade; mean P&L/ES95: 9.36%.
 - Exact historical exchange/broker margin is not claimed.
 - The approved scope is complete. The remaining exact-margin reconstruction is a separate finite future extension, not part of this completed phase.
+
+## 2026-09-22 — Phase 10 publication
+
+The completed research manuscript was consolidated into a versioned publication package. The publication copy explicitly treats Phase 8 as the authoritative methodological revalidation and Phase 9 as the authoritative capital/return interpretation. Historical Phase 7 figures are retained only for auditability. The package includes the manuscript, supplement, current figures/charts, authoritative results table, and CITATION.cff. Publication is a repository-public preprint; no journal peer-review or acceptance is claimed.
