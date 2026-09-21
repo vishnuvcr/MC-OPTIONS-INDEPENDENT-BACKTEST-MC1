@@ -43,7 +43,8 @@ Primary questions:
 | 4 | phase-4-nifty | Full NIFTY backtest and diagnostics | Complete |
 | 5 | phase-5-sensex | Full SENSEX backtest and diagnostics | Complete |
 | 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
-| 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Complete |
+| 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Complete* |
+| 8 | phase-8-methodological-revalidation | Correct development-history framing, leakage chronology audit, clustered uncertainty, full raw-option calibration, execution/capital/strike robustness | In progress |
 
 ## Data principles
 
@@ -68,7 +69,7 @@ Every phase has its own branch and a manually runnable GitHub Actions workflow. 
 
 ## Status
 
-Phases 0-7 are complete. The validated primary sample is 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. The final manuscript records the positive sample results, tail risk, execution sensitivity, and the infrastructure-constrained raw-option MC calibration sensitivity limitation.
+Phases 0-7 produced the locked-rule historical sample; Phase 8 methodological revalidation is now in progress. The validated primary sample remains 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. The final manuscript records the positive sample results, tail risk, execution sensitivity, and the infrastructure-constrained raw-option MC calibration sensitivity limitation.
 
 See:
 - [research protocol](research/RESEARCH_PROTOCOL.md)
@@ -82,6 +83,11 @@ See:
 - [References](research/manuscript/REFERENCES.md)
 - [Figures and charts](research/manuscript/FIGURES.md)
 - [Manuscript tables](research/manuscript/tables/PRIMARY_STATS.csv)
+- [Phase 8 methodological revalidation plan](research/PHASE8_METHODOLOGICAL_REVALIDATION_PLAN.md)
 - [Final conclusion](research/FINAL_CONCLUSION.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
+
+
+### Phase 8 status
+Phase 7 remains the numerical baseline, but its claims of pre-specification/no parameter search are amended. Earlier BATMAN development included joint tuning, so the 63/61-trade sample is not called independently out-of-sample without a genuine unseen split. Phase 8 is the corrective validation phase and does not change the locked strategy.
