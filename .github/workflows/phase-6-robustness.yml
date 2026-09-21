@@ -4,35 +4,9 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main]
-    paths:
-      - "src/model/**"
-      - "src/analysis/**"
-      - "tests/**"
-      - "research/PHASE6_ROBUSTNESS_PLAN.md"
-      - "research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md"
-      - ".github/workflows/phase-6-robustness.yml"
 
 jobs:
-  nifty-scenarios:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - label: w504_p5000
-            window: 504
-            paths: 5000
-          - label: w756_p1000
-            window: 756
-            paths: 1000
-          - label: w756_p5000
-            window: 756
-            paths: 5000
-          - label: w756_p10000
-            window: 756
-            paths: 10000
-          - label: w1008_p5000
-            window: 1008
-            paths: 5000
+  nifty:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -67,33 +41,24 @@ jobs:
               src=hf_hub_download("rissin/nse-options-intraday",filename=f"upstox_intraday/NIFTY/NIFTY_{y}.parquet",repo_type="dataset",revision=rev)
               shutil.copy2(src,Path("data/raw/hf/NIFTY")/f"NIFTY_{y}.parquet")
           PY
-      - name: Run NIFTY scenario
-        run: python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window ${{ matrix.window }} --paths ${{ matrix.paths }} --output data/processed/nifty_${{ matrix.label }}.csv
+      - name: Run five NIFTY scenarios
+        run: |
+          mkdir -p data/processed/phase6/nifty/scenarios
+          python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window 504 --paths 5000 --output data/processed/phase6/nifty/scenarios/nifty_w504_p5000.csv
+          python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window 756 --paths 1000 --output data/processed/phase6/nifty/scenarios/nifty_w756_p1000.csv
+          python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window 756 --paths 5000 --output data/processed/phase6/nifty/scenarios/nifty_w756_p5000.csv
+          python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window 756 --paths 10000 --output data/processed/phase6/nifty/scenarios/nifty_w756_p10000.csv
+          python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window 1008 --paths 5000 --output data/processed/phase6/nifty/scenarios/nifty_w1008_p5000.csv
+      - name: Analyze NIFTY
+        run: python -m src.analysis.robustness --index NIFTY --primary data/processed/phase6/nifty/scenarios/nifty_w756_p5000.csv --scenario-dir data/processed/phase6/nifty/scenarios --output-dir data/processed/phase6/nifty/analysis
       - uses: actions/upload-artifact@v4
         with:
-          name: phase6-nifty-${{ matrix.label }}
-          path: data/processed/nifty_${{ matrix.label }}.csv
+          name: phase6-nifty
+          path: |
+            data/processed/phase6/nifty/
+            data_revision.txt
 
-  sensex-scenarios:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - label: w504_p5000
-            window: 504
-            paths: 5000
-          - label: w756_p1000
-            window: 756
-            paths: 1000
-          - label: w756_p5000
-            window: 756
-            paths: 5000
-          - label: w756_p10000
-            window: 756
-            paths: 10000
-          - label: w1008_p5000
-            window: 1008
-            paths: 5000
+  sensex:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -128,46 +93,19 @@ jobs:
               src=hf_hub_download("rissin/nse-options-intraday",filename=f"upstox_intraday/SENSEX/SENSEX_{y}.parquet",repo_type="dataset",revision=rev)
               shutil.copy2(src,Path("data/raw/hf/SENSEX")/f"SENSEX_{y}.parquet")
           PY
-      - name: Run SENSEX scenario
-        run: python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window ${{ matrix.window }} --paths ${{ matrix.paths }} --output data/processed/sensex_${{ matrix.label }}.csv
+      - name: Run five SENSEX scenarios
+        run: |
+          mkdir -p data/processed/phase6/sensex/scenarios
+          python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window 504 --paths 5000 --output data/processed/phase6/sensex/scenarios/sensex_w504_p5000.csv
+          python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window 756 --paths 1000 --output data/processed/phase6/sensex/scenarios/sensex_w756_p1000.csv
+          python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window 756 --paths 5000 --output data/processed/phase6/sensex/scenarios/sensex_w756_p5000.csv
+          python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window 756 --paths 10000 --output data/processed/phase6/sensex/scenarios/sensex_w756_p10000.csv
+          python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window 1008 --paths 5000 --output data/processed/phase6/sensex/scenarios/sensex_w1008_p5000.csv
+      - name: Analyze SENSEX
+        run: python -m src.analysis.robustness --index SENSEX --primary data/processed/phase6/sensex/scenarios/sensex_w756_p5000.csv --scenario-dir data/processed/phase6/sensex/scenarios --output-dir data/processed/phase6/sensex/analysis
       - uses: actions/upload-artifact@v4
         with:
-          name: phase6-sensex-${{ matrix.label }}
-          path: data/processed/sensex_${{ matrix.label }}.csv
-
-  analysis:
-    needs: [nifty-scenarios, sensex-scenarios]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: phase6-nifty-*
-          path: data/phase6/nifty
-          merge-multiple: true
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: phase6-sensex-*
-          path: data/phase6/sensex
-          merge-multiple: true
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install
-        run: pip install pandas numpy tabulate yfinance
-      - name: Prepare scenario files
-        run: |
-          mkdir -p data/processed/phase6/nifty/scenarios data/processed/phase6/sensex/scenarios
-          cp data/phase6/nifty/nifty_*.csv data/processed/phase6/nifty/scenarios/
-          cp data/phase6/sensex/sensex_*.csv data/processed/phase6/sensex/scenarios/
-          cp data/processed/phase6/nifty/scenarios/nifty_w756_p5000.csv data/processed/phase6/nifty/primary.csv
-          cp data/processed/phase6/sensex/scenarios/sensex_w756_p5000.csv data/processed/phase6/sensex/primary.csv
-      - name: Robustness analysis
-        run: |
-          python -m src.analysis.robustness --index NIFTY --primary data/processed/phase6/nifty/primary.csv --scenario-dir data/processed/phase6/nifty/scenarios --output-dir data/processed/phase6/nifty/analysis
-          python -m src.analysis.robustness --index SENSEX --primary data/processed/phase6/sensex/primary.csv --scenario-dir data/processed/phase6/sensex/scenarios --output-dir data/processed/phase6/sensex/analysis
-          python -m src.analysis.robustness --compare-nifty data/processed/phase6/nifty/primary.csv --compare-sensex data/processed/phase6/sensex/primary.csv --output-dir data/processed/phase6/final
-      - uses: actions/upload-artifact@v4
-        with:
-          name: phase6-final
-          path: data/processed/phase6/
+          name: phase6-sensex
+          path: |
+            data/processed/phase6/sensex/
+            data_revision.txt
