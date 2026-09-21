@@ -118,3 +118,7 @@ The first Phase 8 GitHub Actions run reached the test suite and correctly stoppe
 ## 2026-09-21 — Phase 8 lot-size correction
 
 Official NSE cohort dates showed that the earlier fallback schedule was too coarse. The fallback was corrected to NIFTY 25 before 20-Nov-2024, 75 for contracts from 20-Nov-2024 through 05-Jan-2026, and 65 from 06-Jan-2026 onward. Because the pinned intraday dataset has no lot_size column, this corrected fallback remains the active provenance path for this raw-option dataset.
+
+## 2026-09-21 — Phase 8 entry-cost chronology correction
+
+A cost-date audit found that entry STT was keyed to expiry rather than actual execution. This could misclassify trades around the 1-Apr-2026 STT boundary. The engine now keys entry brokerage/venue/STT calculations to the first executable timestamp, while expiry STT remains keyed to the expiry date. A boundary unit test was added.
