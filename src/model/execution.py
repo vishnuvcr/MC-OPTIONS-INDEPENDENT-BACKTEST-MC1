@@ -13,10 +13,27 @@ def first_executable(x, signal_time, strikes):
             q['volume']=pd.to_numeric(q['volume'], errors='coerce')
             q=q[(q.volume>0)|q.volume.isna()]
         if q.empty: return None
-        parts.append(q[['timestamp','close']].assign(label=leg.label))
-    wide=pd.concat(parts, ignore_index=True).pivot_table(index='timestamp', columns='label', values='close', aggfunc='last')
+        cols=['timestamp','close'] + (['volume'] if 'volume' in q.columns else [])
+        parts.append(q[cols].assign(label=leg.label))
+    price_frames=[]
+    volume_frames=[]
+    for p in parts:
+        pf=p.pivot_table(index='timestamp', columns='label', values='close', aggfunc='last')
+        price_frames.append(pf)
+        if 'volume' in p.columns:
+            vf=p.pivot_table(index='timestamp', columns='label', values='volume', aggfunc='last')
+            volume_frames.append(vf)
+    wide=pd.concat(price_frames,axis=1)
     labels=[leg.label for leg in LEGS]
+    wide=wide.loc[:,~wide.columns.duplicated()]
     wide=wide.dropna(subset=labels)
     if wide.empty: return None
     ts=wide.index.min()
-    return ts,{k:float(wide.loc[ts,k]) for k in labels}
+    prices={k:float(wide.loc[ts,k]) for k in labels}
+    volumes={}
+    if volume_frames:
+        vw=pd.concat(volume_frames,axis=1)
+        vw=vw.loc[:,~vw.columns.duplicated()]
+        for k in labels:
+            volumes[k]=None if k not in vw.columns or pd.isna(vw.loc[ts,k]) else float(vw.loc[ts,k])
+    return ts,prices,volumes

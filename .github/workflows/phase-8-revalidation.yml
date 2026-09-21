@@ -1,0 +1,132 @@
+name: Phase 8 - Methodological revalidation
+
+concurrency:
+  group: phase8-revalidation
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [phase-8-methodological-revalidation]
+  pull_request:
+    branches: [main]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Option years, comma-separated"
+        required: true
+        default: "2024,2025,2026"
+
+jobs:
+  revalidate:
+    if: ${{ github.event_name != 'issue_comment' || (github.event.issue.pull_request && github.event.issue.number == 10 && github.event.comment.body == '/run-phase8' && github.event.comment.user.login == 'vishnuvcr') }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+    env:
+      YEARS: ${{ inputs.years || '2024,2025,2026' }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-8-methodological-revalidation
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: pip install pandas numpy pyarrow yfinance huggingface_hub tabulate pytest
+
+      - name: Tests
+        run: pytest -q tests/
+
+      - name: Pin dataset revision
+        run: echo "8f7739cab3f38abdcbc6332a6d0a83e1341326e3" > data_revision.txt
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nse-options-8f7739cab3f38abdcbc6332a6d0a83e1341326e3-full
+
+      - name: Download NIFTY raw option data once
+        run: |
+          mkdir -p data/raw/hf/NIFTY
+          python - <<'PY'
+          import shutil
+          from pathlib import Path
+          from huggingface_hub import hf_hub_download
+          rev=open("data_revision.txt").read().strip()
+          years=[int(x) for x in "${YEARS}".split(",") if x.strip()]
+          for y in years:
+              src=hf_hub_download(
+                  "rissin/nse-options-intraday",
+                  filename=f"upstox_intraday/NIFTY/NIFTY_{y}.parquet",
+                  repo_type="dataset",
+                  revision=rev,
+              )
+              shutil.copy2(src,Path("data/raw/hf/NIFTY")/f"NIFTY_{y}.parquet")
+          PY
+
+      - name: Download SENSEX raw option data once
+        run: |
+          mkdir -p data/raw/hf/SENSEX
+          python - <<'PY'
+          import shutil
+          from pathlib import Path
+          from huggingface_hub import hf_hub_download
+          rev=open("data_revision.txt").read().strip()
+          years=[int(x) for x in "${YEARS}".split(",") if x.strip()]
+          for y in years:
+              src=hf_hub_download(
+                  "rissin/nse-options-intraday",
+                  filename=f"upstox_intraday/SENSEX/SENSEX_{y}.parquet",
+                  repo_type="dataset",
+                  revision=rev,
+              )
+              shutil.copy2(src,Path("data/raw/hf/SENSEX")/f"SENSEX_{y}.parquet")
+          PY
+
+      - name: Audit raw schemas
+        run: |
+          python - <<'PY'
+          import pyarrow.parquet as pq
+          from pathlib import Path
+          expected={"date","timestamp","underlying","expiry","strike","option_type","exercise_style","open","high","low","close","volume","oi","settle_price","source","granularity"}
+          for u in ("NIFTY","SENSEX"):
+              p=next(Path(f"data/raw/hf/{u}").glob(f"{u}_*.parquet"))
+              cols=set(pq.read_schema(p).names)
+              assert cols==expected, (u, sorted(cols), sorted(expected-cols), sorted(cols-expected))
+              assert "lot_size" not in cols
+              print(u, "schema OK; lot_size absent as expected")
+          PY
+
+      - name: Run full NIFTY 9-scenario raw-option matrix
+        run: python -m src.model.matrix --underlying NIFTY --years "$YEARS" --output-dir data/processed/phase8/nifty/scenarios
+
+      - name: Run full SENSEX 9-scenario raw-option matrix
+        run: python -m src.model.matrix --underlying SENSEX --years "$YEARS" --output-dir data/processed/phase8/sensex/scenarios
+
+      - name: Run NIFTY Phase 8 audit
+        run: |
+          python -m src.analysis.phase8             --index NIFTY             --trades data/processed/phase8/nifty/scenarios/nifty_w756_p5000.csv             --output-dir data/processed/phase8/nifty/audit
+
+      - name: Run SENSEX Phase 8 audit
+        run: |
+          python -m src.analysis.phase8             --index SENSEX             --trades data/processed/phase8/sensex/scenarios/sensex_w756_p5000.csv             --output-dir data/processed/phase8/sensex/audit
+
+      - name: Paired cross-index uncertainty
+        run: |
+          python -m src.analysis.phase8             --paired-nifty data/processed/phase8/nifty/scenarios/nifty_w756_p5000.csv             --paired-sensex data/processed/phase8/sensex/scenarios/sensex_w756_p5000.csv             --output-dir data/processed/phase8/cross_index
+
+      - name: Package Phase 8 outputs
+        run: |
+          find data/processed/phase8 -type f | sort
+          cp data_revision.txt data/processed/phase8/data_revision.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase8-final
+          path: |
+            data/processed/phase8/
+            data_revision.txt

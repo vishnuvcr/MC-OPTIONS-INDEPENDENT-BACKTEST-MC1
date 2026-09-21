@@ -2,7 +2,7 @@
 ## Reproducible Independent Backtest, Risk Analysis, and Robustness Study
 
 **Repository:** `vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1`  
-**Research date:** 21 September 2026  
+**Research date:** 22 September 2026  
 **Strategy version:** Locked NIFTY BATMAN rule  
 **Primary data revision:** `8f7739cab3f38abdcbc6332a6d0a83e1341326e3`
 
@@ -10,11 +10,11 @@
 
 ## Abstract
 
-This study evaluates a pre-specified four-leg index-option strategy, named **NIFTY BATMAN**, on NSE NIFTY 50 and BSE SENSEX index options. The rule is deterministic: on the third trading session before expiry, at a 09:30 IST information cut-off, the strategy constructs a 756-session bootstrap Monte Carlo distribution with 5,000 paths, accepts a trade only when gross Monte Carlo expected value (MC-EV) is positive, maps terminal P20/P35/P65/P80 quantiles to nearest unique available strikes, enters a +1/-2/+1/-2 four-leg portfolio, executes at the first common executable observation after 09:30, and exits at expiry. Primary implementation friction is fixed at 2 option points of adverse slippage per execution leg, with brokerage, STT and historical lot size applied.
+This study evaluates a locked four-leg index-option strategy, named **NIFTY BATMAN**, on NSE NIFTY 50 and BSE SENSEX index options. The rule is deterministic: on the third trading session before expiry, at a 09:30 IST information cut-off, the strategy constructs a 756-session bootstrap Monte Carlo distribution with 5,000 paths, accepts a trade only when gross Monte Carlo expected value (MC-EV) is positive, maps terminal P20/P35/P65/P80 quantiles to nearest unique available strikes, enters a +1/-2/+1/-2 four-leg portfolio, executes at the first common executable observation after 09:30, and exits at expiry. Primary implementation friction is fixed at 2 option points of adverse slippage per execution leg, with brokerage, STT and historical lot size applied.
 
-The validated sample contains 63 NIFTY and 61 SENSEX executed trades over an intraday option dataset beginning in October 2024. Mean net P&L per executed trade is ₹1,183.66 for NIFTY and ₹2,507.53 for SENSEX. However, the trade-level distributions are highly dispersed and negatively skewed, with ES95 of -₹30,889.80 and -₹26,807.30 respectively. Bootstrap 95% intervals for the mean net P&L include zero for both indices. Slippage stress shows substantial NIFTY sensitivity: mean net P&L falls from ₹1,959.27 at zero slippage to ₹20.24 at 5 points per execution leg. SENSEX remains positive over the tested 0-5 point range.
+Phase 8 revalidated the raw-option implementation on an intraday option dataset beginning in October 2024, with 63 NIFTY and 61 SENSEX executed trades under the common 756-session/5,000-path primary calibration. Mean net P&L per executed trade is ₹966.46 for NIFTY and ₹2,508.06 for SENSEX; the enhanced-friction means are ₹936.45 and ₹2,478.65. Block-bootstrap 95% intervals for the mean net P&L include zero for both indices, and ES95 is -₹31,753.75 and -₹26,807.30 respectively. The full 504/756/1008 × 1,000/5,000/10,000 raw-option calibration matrix was completed. NIFTY is materially calibration-sensitive, while SENSEX remains positive across all nine tested settings.
 
-The evidence therefore establishes a reproducible positive-sample result under the locked primary assumptions, but it does **not** establish a durable trading edge or production readiness. The study's strongest evidence concerns the importance of execution friction and tail risk. The pre-specified raw-option MC-calibration sensitivity matrix (504/756/1008 bootstrap windows × 1,000/5,000/10,000 paths) was implemented as a manual GitHub Actions workflow but could not be executed during this research session because the available GitHub Actions runner queue remained unavailable. That limitation is preserved explicitly rather than being replaced with a proxy calculation.
+The evidence establishes reproducible positive sample means under the locked primary assumptions, but it does **not** establish a durable trading edge or production readiness. The study's strongest evidence concerns execution friction, tail risk, and calibration sensitivity. Phase 8 subsequently completed the full raw-option MC-calibration matrix (504/756/1008 bootstrap windows × 1,000/5,000/10,000 paths) for both indices. The common primary calibration remains 756 sessions × 5,000 paths; the matrix is treated as sensitivity/revalidation, not as a basis for selecting different settings per index.
 
 ---
 
@@ -22,7 +22,7 @@ The evidence therefore establishes a reproducible positive-sample result under t
 
 Index-option strategies can show attractive in-sample economics while failing after execution costs, structural market changes, or tail losses. Recent NIFTY option research similarly emphasizes the gap between theoretical volatility premia and tradeability after implementation frictions and extreme events [1,2].
 
-This study addresses that problem with a locked, chronology-preserving strategy specification and an explicit cost model. The objective is not to optimize the rule to the historical sample. The rule was fixed before the final NIFTY/SENSEX performance analysis.
+This study addresses that problem with a locked, chronology-preserving strategy specification and an explicit cost model. The objective of the present locked-rule analysis is not to introduce additional optimization. However, the broader BATMAN research lineage included joint tuning of entry day, entry timing and exit methodology before the final specification was frozen. Accordingly, the existing 63/61-trade results are historical locked-rule results following research-stage selection; they are not described here as independent out-of-sample validation unless a genuinely unseen validation period is demonstrated.
 
 The selected public option dataset describes a 1-minute intraday track covering NIFTY, BANKNIFTY and SENSEX from October 2024 through 2026, assembled from Upstox historical API candles, with daily history derived from NSE F&O bhavcopy. [3] NSE also maintains historical contract-wise price/volume data, F&O bhavcopy/UDiFF reports, settlement data, India VIX history, participant-wise derivatives reports and FII derivatives statistics. [4,5]
 
@@ -67,7 +67,7 @@ The strategy definition is immutable:
 | Costs | Brokerage + STT + historical lot size |
 | Sizing | ES95/ES99 risk proxy |
 
-No parameter search was performed.
+No additional parameter search was performed in the locked-rule implementation. Earlier development/tuning is disclosed above and is treated as part of the strategy-development phase. The 756/5,000 setting is the common primary calibration for both indices.
 
 ---
 
@@ -137,7 +137,7 @@ Terminal P20/P35/P65/P80 quantiles are mapped to the nearest unique available st
 
 ### 5.6 MC-EV gate
 
-For each terminal path, the four-leg expiry payoff is calculated. Gross MC-EV is the average terminal portfolio payoff minus the observed entry premium cash flow, before execution slippage and transaction costs.
+For each terminal path, the four-leg expiry payoff is calculated. Gross MC-EV is the average terminal portfolio payoff minus the signal-time entry premium available from the 09:30 information set, before execution slippage and transaction costs. The later first-common-executable price is not permitted to determine whether the gate passes. Phase 8 adds a trade-level timestamp audit for this ordering.
 
 Only positive gross MC-EV observations are eligible for execution.
 
@@ -149,7 +149,7 @@ Exit occurs at contract expiry using the historical index settlement observation
 
 ### 5.8 Costs
 
-Primary net P&L includes:
+The 2-point-per-leg assumption is a research stress assumption, not a validated estimate of four-leg market impact or simultaneous fill quality. Primary net P&L includes:
 - 2 option points adverse slippage for each of four entry legs;
 - ₹20 brokerage per entry order;
 - date-effective STT;
@@ -192,7 +192,7 @@ No unresolved model-correctness error remained after Phase 3.
 
 ## 7. Results
 
-### 7.1 Primary results
+### 7.1 Phase 7 historical baseline (preserved)
 
 | Metric | NIFTY | SENSEX |
 |---|---:|---:|
@@ -210,7 +210,21 @@ No unresolved model-correctness error remained after Phase 3.
 | Minimum trade | -₹38,992.43 | -₹38,352.77 |
 | Maximum trade | ₹22,311.80 | ₹28,499.89 |
 
-### 7.2 Distributional statistics
+### 7.2 Phase 8 raw-option revalidation primary results
+
+| Metric | NIFTY | SENSEX |
+|---|---:|---:|
+| Executed trades | 63 | 61 |
+| Mean net P&L | **₹966.46** | **₹2,508.06** |
+| Mean net P&L with enhanced friction | **₹936.45** | **₹2,478.65** |
+| Block-bootstrap 95% CI for mean | **-₹1,985.18 to ₹3,955.42** | **-₹479.84 to ₹5,530.85** |
+| ES95 | **-₹31,753.75** | **-₹26,807.30** |
+| Mean absolute strike displacement | 12.14 points | 24.83 points |
+| Maximum absolute strike displacement | 24.90 points | 97.86 points |
+
+Phase 8 is the current methodological result. The Phase 7 values above remain in the manuscript as a reproducibility baseline; they are not silently overwritten because the raw-option revalidation changed the NIFTY sample estimate materially.
+
+### 7.3 Distributional statistics
 
 | Statistic | NIFTY | SENSEX |
 |---|---:|---:|
@@ -221,7 +235,7 @@ No unresolved model-correctness error remained after Phase 3.
 
 The negative skewness indicates that mean P&L is exposed to relatively large downside observations. The correlation between MC-EV and realized net P&L is positive but moderate, so the gate does not eliminate realized-outcome uncertainty.
 
-### 7.3 Mean uncertainty
+### 7.4 Mean uncertainty
 
 Bootstrap 95% intervals for mean net P&L:
 - NIFTY: approximately **-₹1,585 to ₹3,727**.
@@ -236,6 +250,8 @@ These tests do not provide evidence of a precisely estimated positive mean at co
 ---
 
 ## 8. Slippage and Cost Sensitivity
+
+The observed slippage stress should not be interpreted as proof of real executable fills. A four-leg basket can experience leg-by-leg timing, spread, queue and stale-quote effects. Phase 8 therefore treats fixed point slippage as a sensitivity parameter and adds bid/ask/fill analysis where source data permit.
 
 ### 8.1 Slippage stress
 
@@ -296,20 +312,21 @@ The interval spans zero. The available sample does not precisely distinguish the
 ## 11. Robustness Status
 
 ### Completed
-- trade-level bootstrap confidence intervals;
+- trade-level and block-bootstrap uncertainty;
 - mean/median uncertainty;
 - yearly stratification;
 - slippage 0/1/2/3/5 points;
-- cost attribution;
-- ES95/ES99;
-- cross-index bootstrap comparison.
+- baseline and enhanced cost attribution;
+- ES95/ES99 and sizing examples;
+- strike-mapping and execution-volume audits;
+- full raw-option 504/756/1008 × 1,000/5,000/10,000 matrix;
+- paired NIFTY/SENSEX analysis where dates permit.
 
-### Not completed in this research session
-- exact raw-option re-selection under bootstrap windows 504 and 1008;
-- exact raw-option re-selection under 1,000 and 10,000 MC paths;
-- full historical India VIX/FII-DII/global-market synchronized trade-level regime join.
+### Remaining outside Phase 8 scope
+- full historical India VIX/FII-DII/global-market synchronized trade-level regime join;
+- genuinely unseen prospective validation.
 
-These are not approximated from final trades because doing so would change the information set and potentially alter the MC gate and strike mapping.
+The completed matrix re-runs the full raw-option chain rather than perturbing the already-selected trade list.
 
 ---
 
@@ -376,16 +393,20 @@ The SENSEX sample mean is higher, but the cross-index interval spans zero. Diffe
 
 It can claim:
 - reproducible implementation;
-- successful leakage validation;
-- positive sample mean after the primary costs;
+- successful leakage and chronology validation;
+- positive sample means under the locked primary calibration;
 - strong tail-risk presence;
-- substantial execution sensitivity.
+- material execution and NIFTY calibration sensitivity.
 
 It cannot claim:
 - a statistically precise positive population mean;
-- robustness across the unexecuted MC-calibration sensitivity dimensions;
+- calibration-invariant robustness for NIFTY;
 - production readiness;
 - guaranteed future profitability.
+
+### 14.7 Calibration setting and why it is kept common
+
+Phase 8 shows a material calibration sensitivity for NIFTY: the nine tested settings produce mean net P&L from approximately ₹13 to ₹1,469 per trade. SENSEX is positive across all nine settings, with means from approximately ₹1,641 to ₹2,773. These differences are informative about robustness, but they do not justify choosing one setting for NIFTY and another for SENSEX from the same historical evaluation sample. Doing so would be post hoc parameter selection. The study therefore retains the same locked primary setting—756 sessions and 5,000 paths—for both indices. Instrument-specific calibration remains a future research question requiring a pre-registered selection rule and genuinely unseen validation data.
 
 ---
 
@@ -412,8 +433,8 @@ It cannot claim:
 4. The sample contains only 124 executed trades across both indices.
 5. The mean P&L confidence intervals include zero.
 6. The sample is concentrated in 2025 and 2026-to-date.
-7. The raw-option MC calibration sensitivity matrix remains unexecuted because of GitHub Actions runner availability.
-8. All-in statutory/venue costs beyond the primary brokerage/STT/slippage model were not used as the base case.
+7. The raw-option MC calibration matrix is complete, but the NIFTY result is materially calibration-sensitive and therefore is not promoted as robust across calibration choices.
+8. All-in statutory/venue costs remain a robustness layer rather than a claim of exact live account-specific costs.
 9. Historical FII/DII/global-regime synchronization was not forced where reliable historical data were unavailable.
 10. No paper-trading or live execution validation was performed.
 
@@ -421,39 +442,25 @@ It cannot claim:
 
 ## 17. Conclusion
 
-The locked NIFTY BATMAN strategy produced a positive realized sample mean after the specified primary slippage and cost model:
+Phase 8 is now the authoritative methodological revalidation of the historical sample. Under the common locked primary calibration (756 sessions × 5,000 paths), the raw-option recomputation produced:
 
-- NIFTY: **₹1,183.66 mean net P&L/trade**
-- SENSEX: **₹2,507.53 mean net P&L/trade**
+- NIFTY: **₹966.46 mean net P&L/trade**, or **₹936.45** under the enhanced friction layer;
+- SENSEX: **₹2,508.06 mean net P&L/trade**, or **₹2,478.65** under the enhanced friction layer.
 
-The same sample shows:
-- materially negative tail outcomes;
-- broad uncertainty around the mean;
-- execution sensitivity for NIFTY;
-- incomplete robustness with respect to raw-option MC calibration.
+The block-bootstrap 95% mean-P&L intervals include zero for both indices: NIFTY **₹-1,985.18 to ₹3,955.42** and SENSEX **₹-479.84 to ₹5,530.85**. NIFTY is materially calibration-sensitive across the 18-scenario matrix; SENSEX remains positive across all nine tested calibration configurations. Exact theoretical quantile strikes were not observed in the primary trades, with mean absolute displacement of 12.14 index points for NIFTY and 24.83 for SENSEX.
 
 The scientifically supported conclusion is therefore:
 
-> **The backtest demonstrates a positive sample outcome under the locked assumptions, but the evidence is not sufficient to establish a stable, population-level or production-ready trading edge.**
+> **The historical sample provides reproducible positive sample means under the locked primary assumptions, with substantial tail risk and execution/calibration sensitivity; it does not establish a stable population-level or production-ready trading edge.**
 
-The most important follow-up experiment is to complete the exact raw-option MC window/path sensitivity matrix on the same pinned dataset and then extend the intraday sample with independently sourced exchange-grade history where licensing and availability permit.
+The Phase 7 results remain preserved as a historical baseline. Phase 8 does not retune the strategy and does not select different settings for NIFTY and SENSEX. The next high-value step is genuinely unseen prospective validation with the 756/5,000 rule frozen, followed by exchange-grade data extension and synchronized regime analysis.
 
 ---
 
 ## 18. Future Research
 
-### Priority 1 — Complete MC calibration sensitivity
-Run exactly:
-- 504, 756, 1008 bootstrap sessions;
-- 1,000, 5,000, 10,000 paths.
-
-Recompute:
-- terminal quantiles;
-- exact strike mapping;
-- MC-EV;
-- gate;
-- executions;
-- realized net P&L.
+### Priority 1 — Prospective frozen validation
+Evaluate genuinely unseen future expiries using the locked 756-session/5,000-path rule without re-estimation or index-specific retuning.
 
 ### Priority 2 — Exchange-grade historical extension
 Extend NIFTY and SENSEX intraday option data before October 2024 where legally/reproducibly possible.
@@ -521,3 +528,42 @@ Lock all parameters and evaluate unseen future expiries without re-estimation.
 - Error log: `research/logs/ERROR_LOG.md`
 - Research log: `research/logs/RESEARCH_LOG.md`
 - Phase 6 workflow: `.github/workflows/phase-6-robustness.yml`
+
+
+---
+
+## 15. Methodological Revalidation Amendment
+
+### 15.1 Development versus validation
+
+The research history is separated into strategy-development/tuning, locked-rule specification, historical locked-rule evaluation, and prospective or genuinely unseen validation if a clean date split is available. The existing 63 NIFTY and 61 SENSEX observations remain descriptive outputs of the locked implementation, but are not represented as independently out-of-sample evidence if those observations were available during development.
+
+### 15.2 MC-EV chronology audit
+
+Phase 8 records the gate-premium timestamp separately from the later execution timestamp and verifies that the gate uses the signal-time information set. Gate-timestamp validity was 100% in the primary NIFTY and SENSEX scenarios.
+
+### 15.3 Dependence-aware inference
+
+The iid trade-bootstrap interval remains a descriptive secondary measure. Phase 8 adds expiry-cluster/block-bootstrap intervals to preserve temporal dependence and regime clustering. The paired NIFTY/SENSEX analysis found only one common signal date and therefore did not support paired inference.
+
+### 15.4 Strike mapping and capital
+
+Phase 8 quantified strike displacement, uniqueness, payoff structure and ES95 sizing examples. Final strike uniqueness was 100% in the primary scenarios; exact theoretical-target strikes were 0%; mean absolute displacement was 12.14 NIFTY points and 24.83 SENSEX points. The ES95 sizing proxy remains a risk indicator rather than a full broker margin model.
+
+### 15.5 Coverage dates
+
+The 2026 results are coverage-to-date for the available intraday dataset, not full calendar-year results through 21 September 2026. The available NIFTY and SENSEX samples currently end in July 2026.
+
+### 15.6 Raw-option calibration matrix
+
+Phase 8 reran the full raw-option chain for all 18 scenarios: 504/756/1008 bootstrap sessions × 1,000/5,000/10,000 paths × NIFTY/SENSEX. The matrix was executed successfully in run 35641908887. It is treated as sensitivity/revalidation, not as a parameter-selection exercise.
+
+
+### 15.7 Contract and brokerage qualification
+
+Historical NIFTY lot size cannot be treated as a simple expiry-date constant because NSE revisions apply by contract cohort/effective date. Phase 8 therefore prefers contract-level lot size when present in the raw data and records the source; otherwise the fallback schedule is explicitly identified as a limitation. Separately, Paytm Money brokerage depends on account vintage and published pricing has changed over time, so ₹20/order is retained as the study's historical assumption while ₹10/₹15/₹20 sensitivity is reported. The study does not claim that ₹20 is universal for every Paytm Money account.
+
+
+### 15.8 Enhanced friction model
+
+The primary headline result remains based on the locked 2-point-per-leg slippage plus brokerage and STT model. Phase 8 additionally computes an enhanced statutory/venue-friction layer incorporating premium-based exchange transaction charges, SEBI turnover fee, buyer-side stamp duty and GST on broker/venue service fees. Because Paytm Money brokerage is account-vintage dependent, ₹10/₹15/₹20 per order is also treated as a sensitivity range. These enhanced results are robustness diagnostics rather than a claim that every account incurs exactly the same all-in charges.

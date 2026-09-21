@@ -95,3 +95,70 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - Manual Phase 7 validation workflow added.
 - Final manuscript distinguishes validated primary results from the infrastructure-constrained raw-option MC calibration sensitivity.
 - The research plan is complete through Phase 7; future work is documented rather than extending the present study indefinitely.
+
+
+## 2026-09-21 — Phase 8 methodological revalidation initiated
+
+External scientific review identified material issues in the Phase 7 framing: earlier BATMAN development included joint tuning; MC-EV chronology needs timestamp proof; iid trade bootstrap is insufficient as the sole uncertainty method; four-leg execution and strike mapping need realism diagnostics; capital/margin analysis is incomplete; and the raw-option 504/756/1008 × 1,000/5,000/10,000 matrix remains outstanding.
+
+Branch phase-8-methodological-revalidation was created. The locked strategy rule is unchanged. This phase corrects research claims and adds validation; it does not retune BATMAN.
+
+## 2026-09-21 — Phase 8 implementation findings
+
+- Added trade-level gate premium timestamp/source, execution-leg volume, available strike-grid, strike displacement, and lot-size source fields.
+- Added dependence-aware block bootstrap, paired signal-date NIFTY/SENSEX comparison, strike-mapping audit, execution-volume audit, payoff-structure analysis, and ES95 sizing examples.
+- Added full raw-option 9-scenario matrix runner per index (18 total scenarios) and pull-request/dispatch GitHub Actions workflow.
+- Added Paytm Money brokerage sensitivity and contract/cost source audit.
+- Critical data-governance finding: NIFTY lot-size changes are contract-cohort/effective-date dependent, so expiry-only hard-coded lot-size logic is not sufficient when contract-level lot size is unavailable. Phase 8 now prefers contract-level lot_size from the raw dataset and records the provenance source.
+
+## 2026-09-21 — Phase 8 first workflow validation result
+
+The first Phase 8 GitHub Actions run reached the test suite and correctly stopped before downloading market data. 15 tests passed and one legacy validation test failed because the execution function was extended from a 2-tuple to a 3-tuple carrying execution volumes. The test was updated to match the new audited return shape. No numerical backtest result was accepted from the failed run.
+
+## 2026-09-21 — Phase 8 lot-size correction
+
+Official NSE cohort dates showed that the earlier fallback schedule was too coarse. The fallback was corrected to NIFTY 25 before 20-Nov-2024, 75 for contracts from 20-Nov-2024 through 05-Jan-2026, and 65 from 06-Jan-2026 onward. Because the pinned intraday dataset has no lot_size column, this corrected fallback remains the active provenance path for this raw-option dataset.
+
+## 2026-09-21 — Phase 8 entry-cost chronology correction
+
+A cost-date audit found that entry STT was keyed to expiry rather than actual execution. This could misclassify trades around the 1-Apr-2026 STT boundary. The engine now keys entry brokerage/venue/STT calculations to the first executable timestamp, while expiry STT remains keyed to the expiry date. A boundary unit test was added.
+
+## 2026-09-22 — Phase 8 execution bottleneck correction
+
+The monitoring UI disconnected while GitHub Actions was being polled, and the authoritative workflow was queued. The Phase 8 workflow previously requested two simultaneous hosted runners. It was consolidated to a single ubuntu-24.04 job executing both index matrices sequentially. This preserves the full 18-scenario design while reducing runner requirements and avoiding a two-runner scheduling bottleneck.
+
+## 2026-09-22 — Phase 8 local validation attempt
+
+A local clone/pytest attempt was blocked because the execution container could not resolve github.com. Therefore no local numerical output is accepted; GitHub Actions remains the authoritative reproducibility path.
+
+## 2026-09-22 — Phase 8 infrastructure stop condition
+
+The consolidated Phase 8 workflow was reduced to one job and moved to an alternate hosted runner image. The latest authoritative run (run 102, head 5cb604dcfa5a7bab0b39ebd1cd80bea192b2ef11) remains queued with no job steps started. Direct local execution is also unavailable because this environment cannot resolve GitHub/Hugging Face hosts. The research therefore stops at the approved Phase 8 infrastructure boundary rather than substituting data, changing the model, or inventing numerical results.
+
+
+## 2026-09-22 — Phase 8 authoritative execution started
+
+- After runner-capacity mitigation, authoritative GitHub Actions run 35641908887 transitioned from queued to in progress.
+- Job setup, checkout, Python environment, tests, dataset-revision pinning, Hugging Face cache setup, NIFTY/SENSEX raw-data downloads, and raw-schema audit all completed successfully.
+- The NIFTY full raw-option 18-scenario calibration matrix is currently executing; SENSEX and the downstream Phase 8 audits remain pending.
+- This supersedes the earlier infrastructure-stop wording for the current execution state. No numerical Phase 8 result is accepted before the full chain and audits complete.
+
+
+## 2026-09-22 — Phase 8 numerical revalidation complete
+
+- Authoritative run 35641908887 completed successfully.
+- All 18 raw-option calibration scenarios completed: 3 bootstrap windows (504/756/1008) × 3 MC path counts (1,000/5,000/10,000) for each of NIFTY and SENSEX.
+- Primary 756/5,000 result: NIFTY 63 trades, mean net ₹966.46/trade, enhanced-friction mean ₹936.45; SENSEX 61 trades, mean net ₹2,508.06/trade, enhanced-friction mean ₹2,478.65.
+- Cluster/block-bootstrap 95% mean-P&L intervals include zero for both indices: NIFTY ₹-1,985.18 to ₹3,955.42; SENSEX ₹-479.84 to ₹5,530.85.
+- Gate chronology and execution-volume audits passed at 100% in the primary scenario; final strike uniqueness was 100%, with non-zero strike displacement from theoretical quantiles.
+- Paired NIFTY/SENSEX analysis had only one common signal date and therefore did not support paired inference.
+- Full results and calibration matrix are recorded in research/PHASE8_RESULTS.md.
+
+
+## 2026-09-22 — Phase 8 interpretation lock
+
+- The raw-option 18-scenario revalidation is complete and is now the authoritative methodological robustness result.
+- The primary calibration remains common across NIFTY and SENSEX at 756 historical sessions × 5,000 MC paths.
+- The 18-scenario matrix is treated as sensitivity/revalidation only. No index-specific setting is selected from the same historical sample because that would be post hoc tuning.
+- NIFTY shows materially greater calibration sensitivity than SENSEX; SENSEX remains positive across all nine tested settings.
+- Future instrument-specific calibration, if studied, must use a pre-registered selection rule and genuinely unseen validation expiries.
