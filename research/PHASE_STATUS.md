@@ -7,6 +7,6 @@
 | 2 Model | phase-2-model | Complete | 2026-09-21 |
 | 3 Validation | phase-3-validation | Complete | 2026-09-21 |
 | 4 NIFTY | phase-4-nifty | Complete | 2026-09-21 |
-| 5 SENSEX | phase-5-sensex | Not started | 2026-09-21 |
+| 5 SENSEX | phase-5-sensex | Complete | 2026-09-21 |
 | 6 Robustness | phase-6-robustness | Not started | 2026-09-21 |
 | 7 Manuscript | phase-7-manuscript | Not started | 2026-09-21 |

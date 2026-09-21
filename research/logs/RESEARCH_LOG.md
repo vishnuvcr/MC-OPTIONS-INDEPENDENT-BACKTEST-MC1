@@ -69,3 +69,10 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - Executed trades: 63; coverage through 2026-07-21.
 - Mean net P&L: Rs 1,183.66 per executed trade.
 - Net ES95: Rs -30,889.80; ES99: Rs -38,992.43.
+
+## Phase 5 SENSEX complete (2026-09-21)
+
+- Dedicated SENSEX workflow run 1 completed successfully.
+- Executed trades: 61; coverage through 2026-07-16.
+- Mean net P&L: Rs 2,507.53 per executed trade.
+- Net ES95: Rs -26,807.30; ES99: Rs -38,352.77.
