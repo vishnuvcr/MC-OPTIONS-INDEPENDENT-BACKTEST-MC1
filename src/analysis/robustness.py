@@ -244,8 +244,7 @@ def write_single(index_name: str, primary_path: Path, scenario_dir: Path, outdir
         t = regime_table(enriched, c)
         if not t.empty:
             report += [f"", f"### {c}", "", t.to_markdown(index=False)]
-    (outdir / "PHASE6_INDEX_REPORT.md").write_text("
-".join(report), encoding="utf-8")
+    (outdir / "PHASE6_INDEX_REPORT.md").write_text("\n".join(report), encoding="utf-8")
 
 
 def compare_indices(nifty_summary: Path, sensex_summary: Path, outdir: Path) -> None:
