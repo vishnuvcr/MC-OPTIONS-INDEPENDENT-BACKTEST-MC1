@@ -1,0 +1,15 @@
+category,metric,NIFTY,SENSEX
+primary,executed_trades,63,61
+primary,mean_net_pnl_rupees,966.459287,2508.055607
+primary,mean_enhanced_net_pnl_rupees,936.448590,2478.653456
+risk,es95_loss_rupees,31753.753909,26807.297648
+risk,es99_loss_rupees,38992.428268,38352.768756
+risk,max_drawdown_rupees,61576.414198,66886.419630
+capital,max_concurrent_positions,2,2
+capital,conservative_research_capital_proxy_rupees,63507.507817,66886.419630
+return,mean_pnl_over_es95,0.030436064,0.093558688
+return,mean_pnl_over_conservative_capital_proxy,0.015218032,0.037497232
+return,simple_linear_annual_pnl_rupees,34266.491586,86905.296947
+return,simple_linear_annual_return_on_conservative_capital_proxy,0.539565994,1.299296590
+execution,mean_abs_strike_displacement_points,12.137214,24.833752
+execution,max_abs_strike_displacement_points,24.900204,97.860739
