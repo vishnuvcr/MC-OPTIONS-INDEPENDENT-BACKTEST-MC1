@@ -500,21 +500,21 @@ Lock all parameters and evaluate unseen future expiries without re-estimation.
 
 [3] rissin, *nse-options-intraday*, Hugging Face dataset card.
 
-[4] NSE India, *All Reports — Derivatives*, including historical F&O bhavcopy, contract-wise price/volume, settlement, participant-wise reports and FII derivatives statistics.
+[4] National Stock Exchange of India. *All Reports - Derivatives*. NSE India.
 
-[5] NSE India, *FII/FPI & DII Trading Activity*.
+[5] National Stock Exchange of India. *FII/FPI & DII Trading Activity*. NSE India.
 
 [6] Du, Z. & Escanciano, J.C. (2016), *Backtesting Expected Shortfall: Accounting for Tail Risk*, Management Science, 63(4), 940-958.
 
 [7] Pochart, B. & Bouchaud, J.P. (2004), *Option Pricing and Hedging with Minimum Local Expected Shortfall*, Quantitative Finance, 4(5), 607-618.
 
-[8] Boyle, P. (1992), transaction-cost-aware discrete-time option replication.
+[8] Boyle, P. P., & Vorst, T. (1992). *Option Replication in Discrete Time with Transaction Costs*. The Journal of Finance, 47(1), 271-293. https://doi.org/10.1111/j.1540-6261.1992.tb03986.x
 
-[9] Toft, K.B. (2009), option replication and transaction costs.
+[9] National Stock Exchange of India. *Equity Derivatives - Margin Reports*. NSE India.
 
-[10] Chidambaran (2007), Monte Carlo density estimation for option strategies under transaction costs.
+[10] National Stock Exchange of India. *NSE Clearing SPAN*. NSE India.
 
-[11] Reuters (15-Sep-2026), India derivatives-settlement reform proposals and expiry-day volatility context.
+[13] Reuters (15 September 2026). *India's proposals to revamp derivatives settlement could alleviate expiry-day volatility, analysts say*. Republished by Moneycontrol.
 
 ---
 
