@@ -44,20 +44,8 @@ def main(path: str, output: str):
     ).reset_index()
     out = Path(output)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
-        "# Summary
-
-" +
-        "
-".join(f"- {k}: {v}" for k,v in summary.items()) +
-        "
-
-## By year
-
-" + yearly.to_markdown(index=False) + "
-",
-        encoding="utf-8",
-    )
+    report = "# Summary\n\n" + "\n".join(f"- {k}: {v}" for k, v in summary.items()) + "\n\n## By year\n\n" + yearly.to_markdown(index=False) + "\n"
+    out.write_text(report, encoding="utf-8")
     print(out.read_text())
 
 
