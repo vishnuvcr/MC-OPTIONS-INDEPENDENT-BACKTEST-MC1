@@ -38,3 +38,8 @@ No unresolved strategy/model correctness error remains from Phases 0-5. The only
 | 2026-09-22 | 8 | Final infrastructure stop | Authoritative Phase 8 run 102 remains queued with no runner assigned despite single-job consolidation and alternate runner image. Local execution cannot reach GitHub/Hugging Face. | Stop numerical revalidation at the approved infrastructure boundary; preserve the locked Phase 7 sample as historical baseline and do not promote unverified Phase 8 numbers. | Blocking |
 
 | 2026-09-22 | 8 | Workflow execution | Earlier Phase 8 infrastructure stop condition was overtaken by hosted-runner availability: run 35641908887 now has an assigned runner and is executing. | Continue the full 18-scenario raw-option revalidation without changing model/data; accept numbers only after downstream audits complete. | Resolved for current run |
+
+
+## 2026-09-22 — Phase 8 error/status reconciliation
+
+The earlier Phase 8 rows marked Open for MC-calibration execution, workflow capacity, manuscript framing, and related validation gaps are superseded by the successful authoritative run 35641908887. They are retained as historical error records. Current status is: raw-option matrix resolved; gate chronology audit passed; dependence-aware block bootstrap completed; strike/execution audits completed; paired cross-index inference remains unavailable because only one common signal date was observed; fixed 2-point slippage remains a research stress assumption rather than a validated live-fill estimate. No unresolved numerical execution blocker remains for the approved Phase 8 scope.
