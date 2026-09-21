@@ -14,3 +14,5 @@ No unresolved critical errors at Phase 0 start.
 | 2026-09-21 | 2 | Error | Phase 2 pytest could not import src because repository root was not on the test import path. | Added tests/conftest.py to insert the repository root into sys.path. | Resolved |
 
 | 2026-09-21 | 2 | Error | GitHub Actions cache key rejected comma-separated year input. | Cache key changed to dataset-revision-only; year selection still controls downloads. | Resolved |
+
+| 2026-09-21 | 2 | Error | First Phase 2 full run produced zero trades: execution join used repeated pandas merges and signal timestamps mixed naive/IST-aware values. | Rewrote the four-leg execution join as one wide timestamp join, normalized all timestamps to Asia/Kolkata, and enforced the MC-EV gate before execution. | Fixed |
