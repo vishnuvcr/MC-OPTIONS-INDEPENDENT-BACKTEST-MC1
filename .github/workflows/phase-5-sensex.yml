@@ -2,13 +2,6 @@ name: Phase 5 - SENSEX backtest
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - "src/model/**"
-      - "src/analysis/**"
-      - "research/**"
-      - ".github/workflows/phase-5-sensex.yml"
 
 jobs:
   sensex:
