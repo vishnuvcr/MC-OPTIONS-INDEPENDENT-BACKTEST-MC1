@@ -50,12 +50,18 @@ def load_daily(ticker: str) -> pd.DataFrame:
 
 
 def signal_snapshot(window: pd.DataFrame, signal_date: pd.Timestamp):
-    cutoff=pd.Timestamp(f"{signal_date.date()} 09:30:00", tz="Asia/Kolkata")
-    x=window[window["timestamp"]<=cutoff]
+    x = window.copy()
+    x["timestamp"] = pd.to_datetime(x["timestamp"], errors="coerce")
+    if x["timestamp"].dt.tz is None:
+        x["timestamp"] = x["timestamp"].dt.tz_localize("Asia/Kolkata")
+    else:
+        x["timestamp"] = x["timestamp"].dt.tz_convert("Asia/Kolkata")
+    cutoff = pd.Timestamp(f"{signal_date.date()} 09:30:00", tz="Asia/Kolkata")
+    x = x[x["timestamp"] <= cutoff]
     if x.empty:
-        return None,None
-    ts=x["timestamp"].max()
-    return ts,x[x["timestamp"]==ts].copy()
+        return None, None
+    ts = x["timestamp"].max()
+    return ts, x[x["timestamp"] == ts].copy()
 
 
 def signal_prices(snapshot: pd.DataFrame, strikes: dict[str,float]) -> dict[str,float]:
