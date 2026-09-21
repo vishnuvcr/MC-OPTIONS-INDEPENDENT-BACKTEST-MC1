@@ -1,0 +1,150 @@
+name: Phase 6 - Robustness and cross-index analysis
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/model/**"
+      - "src/analysis/**"
+      - "tests/**"
+      - "research/PHASE6_ROBUSTNESS_PLAN.md"
+      - "research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md"
+      - ".github/workflows/phase-6-robustness.yml"
+
+jobs:
+  nifty:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install pandas numpy pyarrow yfinance huggingface_hub tabulate pytest
+      - name: Tests
+        run: pytest -q tests/
+      - name: Resolve dataset revision
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          u="https://huggingface.co/api/datasets/rissin/nse-options-intraday/revision/main"
+          with urllib.request.urlopen(u, timeout=60) as r: x=json.load(r)
+          open("data_revision.txt","w").write(x.get("sha","unknown"))
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nse-options-${{ hashFiles('data_revision.txt') }}-full
+      - name: Download NIFTY
+        run: |
+          mkdir -p data/raw/hf/NIFTY
+          python - <<'PY'
+          import shutil
+          from pathlib import Path
+          from huggingface_hub import hf_hub_download
+          rev=open("data_revision.txt").read().strip()
+          for y in (2024,2025,2026):
+              src=hf_hub_download("rissin/nse-options-intraday",filename=f"upstox_intraday/NIFTY/NIFTY_{y}.parquet",repo_type="dataset",revision=rev)
+              shutil.copy2(src,Path("data/raw/hf/NIFTY")/f"NIFTY_{y}.parquet")
+          PY
+      - name: Run MC sensitivity
+        run: |
+          mkdir -p data/processed/phase6/nifty/scenarios
+          for w in 504 756 1008; do
+            python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window "$w" --paths 5000 --output "data/processed/phase6/nifty/scenarios/nifty__w${w}__p5000.csv"
+          done
+          for p in 1000 10000; do
+            python -m src.model.run --underlying NIFTY --years 2024,2025,2026 --bootstrap-window 756 --paths "$p" --output "data/processed/phase6/nifty/scenarios/nifty__w756__p${p}.csv"
+          done
+      - name: Primary/regime/slippage analysis
+        run: |
+          python -m src.analysis.robustness --index NIFTY --primary data/processed/phase6/nifty/scenarios/nifty__w756__p5000.csv --scenario-dir data/processed/phase6/nifty/scenarios --output-dir data/processed/phase6/nifty/analysis
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase6-nifty
+          path: |
+            data/processed/phase6/nifty/
+            data_revision.txt
+
+  sensex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install pandas numpy pyarrow yfinance huggingface_hub tabulate pytest
+      - name: Tests
+        run: pytest -q tests/
+      - name: Resolve dataset revision
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          u="https://huggingface.co/api/datasets/rissin/nse-options-intraday/revision/main"
+          with urllib.request.urlopen(u, timeout=60) as r: x=json.load(r)
+          open("data_revision.txt","w").write(x.get("sha","unknown"))
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nse-options-${{ hashFiles('data_revision.txt') }}-full
+      - name: Download SENSEX
+        run: |
+          mkdir -p data/raw/hf/SENSEX
+          python - <<'PY'
+          import shutil
+          from pathlib import Path
+          from huggingface_hub import hf_hub_download
+          rev=open("data_revision.txt").read().strip()
+          for y in (2024,2025,2026):
+              src=hf_hub_download("rissin/nse-options-intraday",filename=f"upstox_intraday/SENSEX/SENSEX_{y}.parquet",repo_type="dataset",revision=rev)
+              shutil.copy2(src,Path("data/raw/hf/SENSEX")/f"SENSEX_{y}.parquet")
+          PY
+      - name: Run MC sensitivity
+        run: |
+          mkdir -p data/processed/phase6/sensex/scenarios
+          for w in 504 756 1008; do
+            python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window "$w" --paths 5000 --output "data/processed/phase6/sensex/scenarios/sensex__w${w}__p5000.csv"
+          done
+          for p in 1000 10000; do
+            python -m src.model.run --underlying SENSEX --years 2024,2025,2026 --bootstrap-window 756 --paths "$p" --output "data/processed/phase6/sensex/scenarios/sensex__w756__p${p}.csv"
+          done
+      - name: Primary/regime/slippage analysis
+        run: |
+          python -m src.analysis.robustness --index SENSEX --primary data/processed/phase6/sensex/scenarios/sensex__w756__p5000.csv --scenario-dir data/processed/phase6/sensex/scenarios --output-dir data/processed/phase6/sensex/analysis
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase6-sensex
+          path: |
+            data/processed/phase6/sensex/
+            data_revision.txt
+
+  aggregate:
+    needs: [nifty, sensex]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: phase6-nifty
+          path: data/phase6/nifty
+      - uses: actions/download-artifact@v4
+        with:
+          name: phase6-sensex
+          path: data/phase6/sensex
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install pandas numpy tabulate
+      - name: Cross-index analysis
+        run: |
+          mkdir -p data/processed/phase6/final
+          python -m src.analysis.robustness --compare-nifty data/phase6/nifty/scenarios/nifty__w756__p5000.csv --compare-sensex data/phase6/sensex/scenarios/sensex__w756__p5000.csv --output-dir data/processed/phase6/final
+          cat data/phase6/nifty/analysis/PHASE6_INDEX_REPORT.md data/phase6/sensex/analysis/PHASE6_INDEX_REPORT.md data/processed/phase6/final/CROSS_INDEX_REPORT.md > data/processed/phase6/final/PHASE6_ROBUSTNESS_RESULTS.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase6-final
+          path: data/processed/phase6/final/
