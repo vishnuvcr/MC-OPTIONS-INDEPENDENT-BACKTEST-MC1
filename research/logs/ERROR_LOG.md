@@ -25,3 +25,4 @@ No unresolved strategy/model correctness error remains from Phases 0-5. The only
 | 2026-09-21 | 8 | Execution | First common executable observation is not equivalent to four-leg simultaneous fill. | Add bid/ask/spread/fill sensitivity where data permit and label fixed slippage as a stress assumption. | Open |
 | 2026-09-21 | 8 | Risk | Capital/margin and payoff-bound analysis was incomplete. | Add payoff diagrams, margin/capital requirement, ES sizing example, and tail/gap analysis. | Open |
 | 2026-09-21 | 8 | Robustness | Raw-option MC calibration matrix was not executed. | Re-run the full chain for all 27 calibration scenarios when runner capacity permits. | Open |
+| 2026-09-21 | 8 | Planning | Phase 8 plan initially referred to 27 calibration scenarios. | Corrected arithmetic: 3 bootstrap windows × 3 path counts = 9 scenarios per index, 18 total across NIFTY and SENSEX. | Resolved |\n
