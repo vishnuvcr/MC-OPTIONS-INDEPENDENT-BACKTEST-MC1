@@ -95,3 +95,10 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 - Manual Phase 7 validation workflow added.
 - Final manuscript distinguishes validated primary results from the infrastructure-constrained raw-option MC calibration sensitivity.
 - The research plan is complete through Phase 7; future work is documented rather than extending the present study indefinitely.
+
+
+## 2026-09-21 — Phase 8 methodological revalidation initiated
+
+External scientific review identified material issues in the Phase 7 framing: earlier BATMAN development included joint tuning; MC-EV chronology needs timestamp proof; iid trade bootstrap is insufficient as the sole uncertainty method; four-leg execution and strike mapping need realism diagnostics; capital/margin analysis is incomplete; and the raw-option 504/756/1008 × 1,000/5,000/10,000 matrix remains outstanding.
+
+Branch phase-8-methodological-revalidation was created. The locked strategy rule is unchanged. This phase corrects research claims and adds validation; it does not retune BATMAN.
