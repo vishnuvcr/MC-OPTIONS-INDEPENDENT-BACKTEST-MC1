@@ -102,3 +102,11 @@ Phase 1: acquire and validate reproducible historical option and underlying data
 External scientific review identified material issues in the Phase 7 framing: earlier BATMAN development included joint tuning; MC-EV chronology needs timestamp proof; iid trade bootstrap is insufficient as the sole uncertainty method; four-leg execution and strike mapping need realism diagnostics; capital/margin analysis is incomplete; and the raw-option 504/756/1008 × 1,000/5,000/10,000 matrix remains outstanding.
 
 Branch phase-8-methodological-revalidation was created. The locked strategy rule is unchanged. This phase corrects research claims and adds validation; it does not retune BATMAN.
+
+## 2026-09-21 — Phase 8 implementation findings
+
+- Added trade-level gate premium timestamp/source, execution-leg volume, available strike-grid, strike displacement, and lot-size source fields.
+- Added dependence-aware block bootstrap, paired signal-date NIFTY/SENSEX comparison, strike-mapping audit, execution-volume audit, payoff-structure analysis, and ES95 sizing examples.
+- Added full raw-option 9-scenario matrix runner per index (18 total scenarios) and pull-request/dispatch GitHub Actions workflow.
+- Added Paytm Money brokerage sensitivity and contract/cost source audit.
+- Critical data-governance finding: NIFTY lot-size changes are contract-cohort/effective-date dependent, so expiry-only hard-coded lot-size logic is not sufficient when contract-level lot size is unavailable. Phase 8 now prefers contract-level lot_size from the raw dataset and records the provenance source.
