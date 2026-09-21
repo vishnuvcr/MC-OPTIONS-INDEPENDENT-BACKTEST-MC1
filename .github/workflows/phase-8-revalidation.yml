@@ -3,6 +3,8 @@ name: Phase 8 - Methodological revalidation
 on:
   push:
     branches: [phase-8-methodological-revalidation]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       years:
