@@ -43,7 +43,7 @@ Primary questions:
 | 4 | phase-4-nifty | Full NIFTY backtest and diagnostics | Complete |
 | 5 | phase-5-sensex | Full SENSEX backtest and diagnostics | Complete |
 | 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
-| 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Planned |
+| 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Complete |
 
 ## Data principles
 
@@ -68,7 +68,7 @@ Every phase has its own branch and a manually runnable GitHub Actions workflow. 
 
 ## Status
 
-Phase 0-6 are complete*. The primary sample is 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. Phase 6 completed primary-trade robustness diagnostics and slippage stress; the raw-option MC window/path sensitivity matrix remains preserved as a manual follow-up because GitHub Actions runners were unavailable during execution.
+Phases 0-7 are complete. The validated primary sample is 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. The final manuscript records the positive sample results, tail risk, execution sensitivity, and the infrastructure-constrained raw-option MC calibration sensitivity limitation.
 
 See:
 - [research protocol](research/RESEARCH_PROTOCOL.md)
@@ -77,6 +77,11 @@ See:
 - [strategy specification](research/STRATEGY_SPEC.md)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
+- [Final manuscript](research/manuscript/NIFTY_BATMAN_MANUSCRIPT.md)
+- [Supplement](research/manuscript/SUPPLEMENT.md)
+- [References](research/manuscript/REFERENCES.md)
+- [Figures and charts](research/manuscript/FIGURES.md)
+- [Manuscript tables](research/manuscript/tables/PRIMARY_STATS.csv)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
 
