@@ -130,6 +130,14 @@ def payoff_structure() -> dict:
     }
 
 
+def block_length_sensitivity(x: np.ndarray, lengths=(2,4,8), reps: int = 10000) -> pd.DataFrame:
+    rows=[]
+    for block_len in lengths:
+        point,lo,hi=block_bootstrap_mean(x,block_len=block_len,reps=reps,seed=20260921+block_len)
+        rows.append({"block_length_trades":block_len,"mean_net_rupees":point,"ci95_low":lo,"ci95_high":hi})
+    return pd.DataFrame(rows)
+
+
 def sizing_examples(es95: float, budgets=(50000,100000,250000,500000)) -> pd.DataFrame:
     risk=abs(float(es95))
     rows=[]
@@ -156,6 +164,7 @@ def write_index(index: str, path: Path, outdir: Path):
     (outdir/"payoff_structure.json").write_text(json.dumps(payoff,indent=2),encoding="utf-8")
     es95=float(df["net_realized_rupees"][df["net_realized_rupees"]<=df["net_realized_rupees"].quantile(0.05)].mean())
     sizing_examples(es95).to_csv(outdir/"es95_sizing_examples.csv",index=False)
+    block_length_sensitivity(df["net_realized_rupees"].to_numpy()).to_csv(outdir/"block_length_sensitivity.csv",index=False)
     brokerage_sensitivity(df).to_csv(outdir/"brokerage_sensitivity.csv",index=False)
     summary=pd.DataFrame([{
         "index":index,
