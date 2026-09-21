@@ -1,0 +1,15 @@
+metric,NIFTY,SENSEX
+executed_trades,63,61
+mean_mc_ev_points,52.1462,234.7382
+median_mc_ev_points,27.4434,136.9122
+mean_gross_rupees,2077.2873,2861.8563
+mean_net_rupees,1183.6578,2507.5265
+median_net_rupees,2149.2498,3318.1940
+net_profit_share,0.6667,0.7705
+sum_net_rupees,74570.4425,152959.1150
+es95_rupees,-30889.7995,-26807.2976
+es99_rupees,-38992.4283,-38352.7688
+max_drawdown_rupees,-50343.7244,-66886.4196
+net_pnl_std_rupees,10918.1078,11114.2733
+net_pnl_skew,-1.6986,-1.2068
+mc_ev_pnl_corr,0.2745,0.3030
