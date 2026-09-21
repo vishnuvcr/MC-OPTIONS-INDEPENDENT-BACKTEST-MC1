@@ -32,3 +32,18 @@ def test_slippage_direction():
     assert entry_slipped_price(10,1,2)==12
     assert entry_slipped_price(10,-1,2)==8
     assert stt_sale_rate(pd.Timestamp("2025-01-01"))==0.001
+
+from src.model.execution import first_executable
+
+def test_first_executable_common_timestamp():
+    rows=[
+        {"timestamp":"2026-01-01 09:31:00+05:30","strike":95,"option_type":"PE","close":10,"volume":1},
+        {"timestamp":"2026-01-01 09:31:00+05:30","strike":100,"option_type":"PE","close":12,"volume":1},
+        {"timestamp":"2026-01-01 09:31:00+05:30","strike":105,"option_type":"CE","close":14,"volume":1},
+        {"timestamp":"2026-01-01 09:31:00+05:30","strike":110,"option_type":"CE","close":16,"volume":1},
+    ]
+    import pandas as pd
+    x=pd.DataFrame(rows)
+    out=first_executable(x,pd.Timestamp("2026-01-01 09:30:00+05:30"),{"P20_PE":95,"P35_PE":100,"P65_CE":105,"P80_CE":110})
+    assert out is not None
+    assert str(out[0])[:16]=="2026-01-01 09:31"
