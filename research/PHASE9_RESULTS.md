@@ -1,7 +1,7 @@
 # Phase 9 — Capital and Return Analysis Results
 
 ## Validation status
-Provisional numerical results computed deterministically from the pinned Phase 8 artifact `phase8-final` (artifact ID `10659054480`) using the locked primary 756-session / 5,000-path trade files. GitHub Actions validation of the Phase 9 analysis code is the remaining acceptance check before this phase is marked complete.
+Numerical results were deterministically reconstructed from the pinned Phase 8 artifact `phase8-final` (artifact ID `10659054480`) using the locked primary 756-session / 5,000-path trade files. The Phase 9 workflow with manual and PR triggers is committed to the repository. The GitHub connector did not surface an automatic Phase 9 run/status for the PR, so no claim is made that a remote Phase 9 run completed; this is recorded as an infrastructure observability limitation.
 
 ## Primary capital and return results
 
