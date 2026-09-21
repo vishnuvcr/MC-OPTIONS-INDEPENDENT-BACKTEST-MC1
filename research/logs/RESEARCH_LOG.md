@@ -130,3 +130,7 @@ The monitoring UI disconnected while GitHub Actions was being polled, and the au
 ## 2026-09-22 — Phase 8 local validation attempt
 
 A local clone/pytest attempt was blocked because the execution container could not resolve github.com. Therefore no local numerical output is accepted; GitHub Actions remains the authoritative reproducibility path.
+
+## 2026-09-22 — Phase 8 infrastructure stop condition
+
+The consolidated Phase 8 workflow was reduced to one job and moved to an alternate hosted runner image. The latest authoritative run (run 102, head 5cb604dcfa5a7bab0b39ebd1cd80bea192b2ef11) remains queued with no job steps started. Direct local execution is also unavailable because this environment cannot resolve GitHub/Hugging Face hosts. The research therefore stops at the approved Phase 8 infrastructure boundary rather than substituting data, changing the model, or inventing numerical results.
