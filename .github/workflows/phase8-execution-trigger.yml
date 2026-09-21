@@ -1,12 +1,14 @@
 name: Phase 8 - execution trigger
 
 on:
+  push:
+    branches: [main]
   issue_comment:
     types: [created]
 
 jobs:
   revalidate:
-    if: ${{ github.event.issue.pull_request && github.event.issue.number == 10 && github.event.comment.body == '/run-phase8' && github.event.comment.user.login == 'vishnuvcr' }}
+    if: ${{ (github.event_name == 'push' && contains(github.event.head_commit.message, '[RUN_PHASE8]')) || (github.event_name == 'issue_comment' && github.event.issue.pull_request && github.event.issue.number == 10 && github.event.comment.body == '/run-phase8' && github.event.comment.user.login == 'vishnuvcr') }}
     runs-on: ubuntu-22.04
     timeout-minutes: 360
     env:
