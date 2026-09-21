@@ -104,12 +104,13 @@ def run_trade(
     bootstrap_window: int = 756,
     mc_paths: int = 5000,
     slippage_points: float = 2.0,
+    raw_window: pd.DataFrame | None = None,
 ):
     sessions=expiry_sessions(daily["date"].tolist(), expiry)
     if sessions is None:
         return None,"missing_d3"
     signal_date=sessions[0]
-    window=read_window(path, expiry, signal_date)
+    window=raw_window if raw_window is not None else read_window(path, expiry, signal_date)
     signal_ts,snap=signal_snapshot(window, signal_date)
     if snap is None:
         return None,"missing_signal_snapshot"
