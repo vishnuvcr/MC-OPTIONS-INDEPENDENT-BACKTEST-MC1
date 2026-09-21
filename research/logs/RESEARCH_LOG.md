@@ -142,3 +142,14 @@ The consolidated Phase 8 workflow was reduced to one job and moved to an alterna
 - Job setup, checkout, Python environment, tests, dataset-revision pinning, Hugging Face cache setup, NIFTY/SENSEX raw-data downloads, and raw-schema audit all completed successfully.
 - The NIFTY full raw-option 18-scenario calibration matrix is currently executing; SENSEX and the downstream Phase 8 audits remain pending.
 - This supersedes the earlier infrastructure-stop wording for the current execution state. No numerical Phase 8 result is accepted before the full chain and audits complete.
+
+
+## 2026-09-22 — Phase 8 numerical revalidation complete
+
+- Authoritative run 35641908887 completed successfully.
+- All 18 raw-option calibration scenarios completed: 3 bootstrap windows (504/756/1008) × 3 MC path counts (1,000/5,000/10,000) for each of NIFTY and SENSEX.
+- Primary 756/5,000 result: NIFTY 63 trades, mean net ₹966.46/trade, enhanced-friction mean ₹936.45; SENSEX 61 trades, mean net ₹2,508.06/trade, enhanced-friction mean ₹2,478.65.
+- Cluster/block-bootstrap 95% mean-P&L intervals include zero for both indices: NIFTY ₹-1,985.18 to ₹3,955.42; SENSEX ₹-479.84 to ₹5,530.85.
+- Gate chronology and execution-volume audits passed at 100% in the primary scenario; final strike uniqueness was 100%, with non-zero strike displacement from theoretical quantiles.
+- Paired NIFTY/SENSEX analysis had only one common signal date and therefore did not support paired inference.
+- Full results and calibration matrix are recorded in research/PHASE8_RESULTS.md.
