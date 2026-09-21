@@ -199,15 +199,16 @@ def regime_table(df: pd.DataFrame, col: str) -> pd.DataFrame:
 
 def scenario_summary(directory: Path) -> pd.DataFrame:
     rows = []
+    import re
     for p in sorted(directory.glob("*.csv")):
         if "_errors" in p.name:
             continue
         x = pd.read_csv(p)
         if x.empty:
             continue
-        parts = p.stem.split("__")
-        window = int(parts[1].replace("w","")) if len(parts) > 1 else 756
-        paths = int(parts[2].replace("p","")) if len(parts) > 2 else 5000
+        m = re.search(r"_w(\d+)_p(\d+)$", p.stem)
+        window = int(m.group(1)) if m else 756
+        paths = int(m.group(2)) if m else 5000
         s = summarize(x)
         s.update({"bootstrap_window": window, "mc_paths": paths, "file": p.name})
         rows.append(s)
