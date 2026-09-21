@@ -84,6 +84,3 @@ See:
 - [Manuscript tables](research/manuscript/tables/PRIMARY_STATS.csv)
 - [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
 - [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
-
-
-*Infrastructure-constrained: see [Phase 6 robustness results](research/results/PHASE6_ROBUSTNESS_RESULTS.md).
