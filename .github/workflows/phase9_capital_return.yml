@@ -1,0 +1,47 @@
+name: phase9-capital-return-analysis
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, phase-9-capital-return-analysis]
+  pull_request:
+    branches: [main]
+    paths:
+      - "research/PHASE9_CAPITAL_RETURN_PLAN.md"
+      - "research/data/PHASE9_CAPITAL_MARGIN_SOURCE_AUDIT.md"
+      - "scripts/phase9_capital_return_analysis.py"
+      - ".github/workflows/phase9_capital_return.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  phase9-capital-return:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install analysis dependencies
+        run: python -m pip install --upgrade pip pandas numpy
+      - name: Download pinned Phase 8 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: "10659054480"
+        run: |
+          curl --fail --location --header "Authorization: Bearer $GH_TOKEN" --header "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip" --output phase8-final.zip
+          sha256sum phase8-final.zip
+          unzip -t phase8-final.zip
+      - name: Run capital and return analysis
+        run: |
+          python scripts/phase9_capital_return_analysis.py --artifact phase8-final.zip --outdir data/processed/phase9
+      - name: Upload Phase 9 results
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase9-capital-return
+          path: data/processed/phase9
+          retention-days: 30
