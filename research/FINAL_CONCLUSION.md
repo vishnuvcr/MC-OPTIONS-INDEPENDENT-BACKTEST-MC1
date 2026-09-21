@@ -1,4 +1,4 @@
-# Final Research Conclusion — Phase 8 Revalidation
+# Final Research Conclusion — Phase 9 Capital/Return Revalidation
 
 ## Current status
 
