@@ -9,7 +9,7 @@
 | 4 NIFTY | phase-4-nifty | Complete | 2026-09-21 |
 | 5 SENSEX | phase-5-sensex | Complete | 2026-09-21 |
 | 6 Robustness | phase-6-robustness | Complete* | 2026-09-21 |
-| 7 Manuscript | phase-7-manuscript | Not started | 2026-09-21 |
+| 7 Manuscript | phase-7-manuscript | Complete | 2026-09-21 |
 
 
 *Primary and local robustness diagnostics are complete; the raw-option MC-window/path sensitivity matrix remains an infrastructure-constrained follow-up and is preserved as a manual workflow.
