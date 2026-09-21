@@ -2,6 +2,8 @@ name: phase9-capital-return-analysis
 
 on:
   workflow_dispatch:
+  push:
+    branches: [phase-9-capital-return-analysis]
   pull_request:
     branches: [main]
     paths:
