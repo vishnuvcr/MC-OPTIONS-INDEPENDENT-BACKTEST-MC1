@@ -90,7 +90,15 @@ def lot_size(underlying: str, expiry: pd.Timestamp) -> int:
     raise ValueError(underlying)
 
 
-def run_trade(underlying: str, path: Path, daily: pd.DataFrame, expiry: pd.Timestamp):
+def run_trade(
+    underlying: str,
+    path: Path,
+    daily: pd.DataFrame,
+    expiry: pd.Timestamp,
+    bootstrap_window: int = 756,
+    mc_paths: int = 5000,
+    slippage_points: float = 2.0,
+):
     sessions=expiry_sessions(daily["date"].tolist(), expiry)
     if sessions is None:
         return None,"missing_d3"
@@ -101,10 +109,16 @@ def run_trade(underlying: str, path: Path, daily: pd.DataFrame, expiry: pd.Times
         return None,"missing_signal_snapshot"
     fallback=float(daily.loc[daily["date"]<signal_date,"close"].iloc[-1])
     s0,s0_source=signal_spot_from_parity(snap,fallback)
-    returns=historical_log_returns(daily,signal_date)
-    if len(returns)<756:
-        return None,"missing_756_history"
-    terminals=simulate(s0,returns,len(sessions)-1)
+    returns=historical_log_returns(daily,signal_date,window=bootstrap_window)
+    if len(returns)<bootstrap_window:
+        return None,f"missing_{bootstrap_window}_history"
+    terminals=simulate(
+        s0,
+        returns,
+        len(sessions)-1,
+        paths=mc_paths,
+        bootstrap_window=bootstrap_window,
+    )
     qtargets,strikes=select_strikes(terminals,snap)
     sig_prices=signal_prices(snap,strikes)
     ev=gross_mc_ev(terminals,strikes,sig_prices)
@@ -115,7 +129,7 @@ def run_trade(underlying: str, path: Path, daily: pd.DataFrame, expiry: pd.Times
         return None,"missing_common_execution"
     exec_ts,raw=ex
     qty={x.label:x.quantity for x in LEGS}
-    slipped={k:entry_slipped_price(v,qty[k],2.0) for k,v in raw.items()}
+    slipped={k:entry_slipped_price(v,qty[k],slippage_points) for k,v in raw.items()}
     settle=float(daily.loc[daily["date"]==expiry,"close"].iloc[0])
     gross_pts=0.0
     net_pts=0.0

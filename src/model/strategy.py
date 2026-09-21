@@ -87,6 +87,7 @@ def mc_terminal_paths(
     horizon: int,
     paths: int = 5000,
     seed: int = 756,
+    bootstrap_window: int = 756,
 ) -> np.ndarray:
     if s0 <= 0:
         raise ValueError("s0 must be positive")
@@ -94,9 +95,11 @@ def mc_terminal_paths(
         raise ValueError("horizon must be positive")
     hist = np.asarray(historical_log_returns, dtype=float)
     hist = hist[np.isfinite(hist)]
-    if hist.size < 756:
-        raise ValueError(f"need >=756 historical returns, got {hist.size}")
-    hist = hist[-756:]
+    if bootstrap_window <= 0:
+        raise ValueError("bootstrap_window must be positive")
+    if hist.size < bootstrap_window:
+        raise ValueError(f"need >={bootstrap_window} historical returns, got {hist.size}")
+    hist = hist[-bootstrap_window:]
     rng = np.random.default_rng(seed)
     sample_idx = rng.integers(0, hist.size, size=(paths, horizon))
     sampled = hist[sample_idx]

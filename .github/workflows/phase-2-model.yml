@@ -7,12 +7,6 @@ on:
         description: "Option years, comma-separated"
         required: true
         default: "2024,2025,2026"
-  pull_request:
-    branches: [main]
-    paths:
-      - "src/model/**"
-      - "tests/**"
-      - ".github/workflows/phase-2-model.yml"
 
 jobs:
   model:

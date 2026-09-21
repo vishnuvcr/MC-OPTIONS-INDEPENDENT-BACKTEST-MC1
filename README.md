@@ -36,13 +36,13 @@ Primary questions:
 
 | Phase | Branch | Purpose | Status |
 |---|---|---|---|
-| 0 | phase-0-governance | Repo setup, locked rule, research protocol, error/logging controls | In progress |
-| 1 | phase-1-data | Source audit, data acquisition, provenance, caching, data QA | Planned |
-| 2 | phase-2-model | MC model, strike mapping, gate, execution/cost engine | Planned |
-| 3 | phase-3-validation | Unit tests, invariants, leakage checks, synthetic tests | Planned |
-| 4 | phase-4-nifty | Full NIFTY backtest and diagnostics | Planned |
-| 5 | phase-5-sensex | Full SENSEX backtest and diagnostics | Planned |
-| 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Planned |
+| 0 | phase-0-governance | Repo setup, locked rule, research protocol, error/logging controls | Complete |
+| 1 | phase-1-data | Source audit, data acquisition, provenance, caching, data QA | Complete |
+| 2 | phase-2-model | MC model, strike mapping, gate, execution/cost engine | Complete |
+| 3 | phase-3-validation | Unit tests, invariants, leakage checks, synthetic tests | Complete |
+| 4 | phase-4-nifty | Full NIFTY backtest and diagnostics | Complete |
+| 5 | phase-5-sensex | Full SENSEX backtest and diagnostics | Complete |
+| 6 | phase-6-robustness | Cross-index comparison, sensitivity and regime analysis | Complete* |
 | 7 | phase-7-manuscript | Final manuscript, figures, tables, appendices, supplements | Planned |
 
 ## Data principles
@@ -68,10 +68,17 @@ Every phase has its own branch and a manually runnable GitHub Actions workflow. 
 
 ## Status
 
-Phase 0 initialization is being completed on 2026-09-21 (IST). No performance result is considered valid until the validation phase passes without unresolved critical errors.
+Phase 0-6 are complete*. The primary sample is 63 NIFTY trades and 61 SENSEX trades over the available 1-minute option history beginning in October 2024. Phase 6 completed primary-trade robustness diagnostics and slippage stress; the raw-option MC window/path sensitivity matrix remains preserved as a manual follow-up because GitHub Actions runners were unavailable during execution.
 
 See:
 - [research protocol](research/RESEARCH_PROTOCOL.md)
 - [research log](research/logs/RESEARCH_LOG.md)
 - [error log](research/logs/ERROR_LOG.md)
 - [strategy specification](research/STRATEGY_SPEC.md)
+- [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
+- [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
+- [Phase 6 robustness plan](research/PHASE6_ROBUSTNESS_PLAN.md)
+- [Phase 6 external-context sources](research/data/PHASE6_EXTERNAL_CONTEXT_SOURCES.md)
+
+
+*Infrastructure-constrained: see [Phase 6 robustness results](research/results/PHASE6_ROBUSTNESS_RESULTS.md).

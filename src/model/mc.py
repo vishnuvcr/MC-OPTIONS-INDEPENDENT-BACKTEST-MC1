@@ -5,14 +5,23 @@ import pandas as pd
 from src.model.strategy import choose_unique_strikes, portfolio_payoff, mc_terminal_paths
 
 
-def historical_log_returns(daily: pd.DataFrame, signal_date: pd.Timestamp) -> np.ndarray:
+def historical_log_returns(daily: pd.DataFrame, signal_date: pd.Timestamp, window: int = 756) -> np.ndarray:
     d = daily[daily["date"] < signal_date].copy()
     d["logret"] = np.log(d["close"].astype(float)).diff()
-    return d["logret"].dropna().to_numpy(dtype=float)[-756:]
+    return d["logret"].dropna().to_numpy(dtype=float)[-window:]
 
 
-def simulate(s0: float, returns: np.ndarray, horizon: int, seed: int = 756, paths: int = 5000) -> np.ndarray:
-    return mc_terminal_paths(s0, returns, horizon=horizon, paths=paths, seed=seed)
+def simulate(
+    s0: float,
+    returns: np.ndarray,
+    horizon: int,
+    seed: int = 756,
+    paths: int = 5000,
+    bootstrap_window: int = 756,
+) -> np.ndarray:
+    return mc_terminal_paths(
+        s0, returns, horizon=horizon, paths=paths, seed=seed, bootstrap_window=bootstrap_window
+    )
 
 
 def select_strikes(terminals: np.ndarray, snapshot: pd.DataFrame) -> tuple[dict[str,float],dict[str,float]]:

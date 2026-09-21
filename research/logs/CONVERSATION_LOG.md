@@ -10,3 +10,8 @@ This file records the substantive user requests, decisions, and research actions
 - Repository was found empty; governance files were initialized on main.
 - Direct git clone failed in the runtime due DNS/network restrictions; GitHub repository APIs are being used for version control.
 - GitHub Actions is designated for reproducible remote data acquisition and compute.
+
+## 2026-09-21 — Phase 6 initiated
+- User replied "Ok proceed further" and requested autonomous continuation of the research.
+- Phase 6 robustness branch was created after re-reading the governing protocol, locked strategy, data/cost schedules, phase logs, and NIFTY/SENSEX results.
+- Robustness dimensions were fixed before execution: bootstrap windows 504/756/1008, MC paths 1,000/5,000/10,000, slippage 0/1/2/3/5 points, extra-cost stress, and prior-day market-regime context.
