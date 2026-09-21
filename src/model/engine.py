@@ -154,9 +154,9 @@ def run_trade(
         lot=lot_size(underlying,expiry)
         lot_source="fallback_schedule"
     displacement = {k: float(strikes[k]) - float(qtargets[k]) for k in strikes}
-    costs=entry_costs(slipped,qty,lot,expiry)
+    costs=entry_costs(slipped,qty,lot,pd.Timestamp(exec_ts))
     costs["stt_expiry"]=expiry_stt(expiry,settle,strikes,qty,lot)
-    enhanced=enhanced_entry_costs(underlying,slipped,qty,lot,expiry)
+    enhanced=enhanced_entry_costs(underlying,slipped,qty,lot,pd.Timestamp(exec_ts))
     enhanced["stt_expiry"]=costs["stt_expiry"]
     enhanced_extra = enhanced["exchange_transaction"] + enhanced["sebi_turnover"] + enhanced["stamp_duty"] + enhanced["gst_on_brokerage_and_venue_fees"]
     return {
