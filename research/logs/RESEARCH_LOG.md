@@ -178,3 +178,10 @@ User requested a capital and return interpretation for both NIFTY and SENSEX usi
 - Provisional risk-capital ratios: NIFTY mean P&L/ES95 3.04% and mean P&L/conservative proxy 1.52%; SENSEX 9.36% and 3.75%.
 - Actual broker/exchange margin remains unclaimed because date-specific SPAN risk arrays and broker margin snapshots are absent from the Phase 8 trade output.
 - One code-audit correction was required: the first overlap diagnostic accidentally included singleton positions when labeling the worst overlapping result. The concurrent-position calculation was corrected to evaluate combined P&L only when at least two BATMAN positions were simultaneously active.
+
+## 2026-09-22 — Phase 9 capital/return analysis complete
+
+- NIFTY conservative research capital proxy: ₹63,507.51; mean P&L/conservative proxy: 1.52% per trade; mean P&L/ES95: 3.04%.
+- SENSEX conservative research capital proxy: ₹66,886.42; mean P&L/conservative proxy: 3.75% per trade; mean P&L/ES95: 9.36%.
+- Exact historical exchange/broker margin is not claimed.
+- The approved scope is complete. The remaining exact-margin reconstruction is a separate finite future extension, not part of this completed phase.
