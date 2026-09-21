@@ -1,0 +1,25 @@
+name: Phase 0 — Governance
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - phase-0-governance
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show research contract
+        run: |
+          test -s README.md
+          test -s research/RESEARCH_PROTOCOL.md
+          test -s research/STRATEGY_SPEC.md
+          test -s research/logs/RESEARCH_LOG.md
+          test -s research/logs/ERROR_LOG.md
+          test -s research/PHASE_STATUS.md
+          grep -F "756-session bootstrap MC, 5,000 paths" research/STRATEGY_SPEC.md
+          grep -F "gross MC-EV > 0" research/STRATEGY_SPEC.md
+          grep -F "2 option points per execution leg" research/STRATEGY_SPEC.md
+          echo "Phase 0 governance checks passed."
