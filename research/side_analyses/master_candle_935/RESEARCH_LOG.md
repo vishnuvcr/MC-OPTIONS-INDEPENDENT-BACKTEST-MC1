@@ -1,8 +1,7 @@
 [object Object]
-
 ## 2026-09-29 — MC1 closure
-The initial serial execution architecture stalled because it processed the full option-expiry universe in one job. The runner was corrected to execute six independent calendar-year workers. Authoritative Actions run 36522552275 completed all six workers successfully.
-
-Result: 671 one-lot trades; cumulative baseline net P&L -₹138,608.27; weighted mean -₹206.57/trade; 144 0-DTE trades contributed -₹20,877.66. MC1 closed as a negative baseline discovery. No numerical result from the earlier 10-lot configuration is accepted.
-
-Next phase: MC2 full Paytm Money/NSE friction audit and execution-cost reconciliation.
+- Authoritative workflow 36523896565 completed all six yearly workers successfully.
+- 1-lot baseline consolidated: 671 executed trades, -₹138,608.27 baseline net P&L.
+- Weekly test: 258 non-empty weeks; 34.50% positive; 12.79% reached ≥₹5,000.
+- 2026 is partial through 2026-07-01 in the selected data source.
+- MC1 closed as negative discovery; MC2 opened for full cost reconstruction and robustness.
