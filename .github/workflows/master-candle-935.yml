@@ -14,7 +14,12 @@ permissions:
 
 jobs:
   backtest:
+    name: baseline-${{ matrix.year }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        year: [2021, 2022, 2023, 2024, 2025, 2026]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,12 +34,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas pyarrow huggingface_hub
 
-      - name: Run baseline
+      - name: Run one-lot baseline
         run: |
-          python research/side_analyses/master_candle_935/run_backtest.py
+          YEAR="${{ matrix.year }}"
+          if [ "$YEAR" = "2021" ]; then START="2021-05-27"; else START="$YEAR-01-01"; fi
+          if [ "$YEAR" = "2026" ]; then END="2026-08-04"; else END="$YEAR-12-31"; fi
+          python research/side_analyses/master_candle_935/run_backtest.py --start "$START" --end "$END" --out-dir "artifacts/master_candle_935/$YEAR"
 
-      - name: Upload baseline artifacts
+      - name: Upload one-lot baseline artifact
         uses: actions/upload-artifact@v4
         with:
-          name: master-candle-935-baseline
-          path: artifacts/master_candle_935
+          name: master-candle-935-baseline-${{ matrix.year }}
+          path: artifacts/master_candle_935/${{ matrix.year }}
