@@ -21,3 +21,5 @@
 | 2026-09-29 | MC1 | Baseline friction model is not yet the complete Paytm Money/NSE statutory stack. | MC1 result is labelled baseline discovery; MC2 will reconcile full historical/current charges. |
 
 | 2026-09-29 | MC1 infrastructure | Yearly artifacts were hundreds of MB because the HF market-data cache was uploaded with each result. | Workflow changed to remove `hf_cache` before upload and retain only summary/signals/trades. Prior numerical outputs remain provisional until the clean rerun completes. |
+
+| 2026-09-29 | MC2 execution grid | Four variant calculations succeeded but artifact upload failed because exit-time colons were used in artifact names. | Artifact names changed to sanitized matrix job indexes; incomplete outputs are not accepted. |
