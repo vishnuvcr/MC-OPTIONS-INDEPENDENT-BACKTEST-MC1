@@ -1,6 +1,6 @@
 # Master Candle 09:35–09:45 — Backtest Research Plan
 
-Status: MC0 COMPLETE; MC1 IN PROGRESS
+Status: MC0 COMPLETE; MC1 IN PROGRESS — 1-lot runner corrected
 Main research track: PAUSED (unchanged)
 Side-analysis branch: side-analysis/master-candle-935
 
