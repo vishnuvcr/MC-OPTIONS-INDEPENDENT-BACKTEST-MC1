@@ -19,3 +19,5 @@
 | 2026-09-29 | MC1 | Serial full-universe option processing was effectively stalled/opaque. | Replaced with six parallel year-partitioned workers; all six completed successfully in authoritative run 36522552275. |
 | 2026-09-29 | MC1 | 2026 source coverage ends 2026-07-01 rather than requested 2026-08-04. | Recorded explicitly in result; no extrapolation beyond observed source coverage. |
 | 2026-09-29 | MC1 | Baseline friction model is not yet the complete Paytm Money/NSE statutory stack. | MC1 result is labelled baseline discovery; MC2 will reconcile full historical/current charges. |
+
+| 2026-09-29 | MC1 infrastructure | Yearly artifacts were hundreds of MB because the HF market-data cache was uploaded with each result. | Workflow changed to remove `hf_cache` before upload and retain only summary/signals/trades. Prior numerical outputs remain provisional until the clean rerun completes. |
