@@ -114,3 +114,17 @@ Phase 9 is the capital-interpretation phase for the locked Phase 8 primary sampl
 
 ### Phase 10 — Publication
 The research manuscript is now published in the repository as **Version 1.0** under `publication/`, with a clean manuscript, supplement, current figures/charts, authoritative results table, and `CITATION.cff`. The package is a repository-public preprint and is not represented as peer reviewed or journal accepted.
+
+
+## Side analysis — 09:35–09:45 Master Candle
+
+The main BATMAN research rule is unchanged. A separate side-analysis branch, `side-analysis/master-candle-935`, is being used for the NIFTY 09:35–09:45 master-candle breakout strategy supplied by the user.
+
+Current status: **MC0 specification/audit in progress**. The initial audit found unresolved execution-rule ambiguity, inconsistent long/short wording in the supplied summary, and published profit figures that do not reconcile arithmetically. The currently validated BATMAN option dataset begins in October 2024, so it is not sufficient for a 2021–2026 replication.
+
+See:
+- [Master Candle research plan](research/side_analyses/master_candle_935/PLAN.md)
+- [Master Candle strategy specification](research/side_analyses/master_candle_935/STRATEGY_SPEC.md)
+- [Master Candle initial audit](research/side_analyses/master_candle_935/INITIAL_AUDIT.md)
+- [Master Candle research log](research/side_analyses/master_candle_935/RESEARCH_LOG.md)
+- [Master Candle error log](research/side_analyses/master_candle_935/ERROR_LOG.md)
