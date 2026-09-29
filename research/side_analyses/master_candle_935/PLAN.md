@@ -1,13 +1,11 @@
 # Master Candle 09:35–09:45 — Backtest Research Plan
 
-Status: MC0 COMPLETE; MC1 COMPLETE — negative baseline discovery; MC2 COST/FRICTION AUDIT IN PROGRESS
+Status: MC0 COMPLETE; MC1 COMPLETE — negative baseline discovery; MC2 COST COMPLETE; MC2 EXECUTION GRID CALCULATION COMPLETE — aggregation rerun required
 Main research track: PAUSED (unchanged)
-Side-analysis branch: side-analysis/master-candle-935
+Side-analysis branch: side-analysis/master-candle-935-mc2
 
 ## Research objective
 Evaluate the NIFTY intraday “09:35–09:45 master candle breakout” strategy described by the user, with explicit option execution, risk, slippage, brokerage, statutory charges, historical contract specifications, and statistical uncertainty.
-
-The study must distinguish: (1) what is explicitly stated in the source material supplied by the user, (2) what is inferred/ambiguous, and (3) what is actually reproduced from historical data.
 
 ## Research questions
 1. Does the 09:35–09:45 NIFTY master-candle breakout produce positive directional expectancy before and after option execution friction?
@@ -38,50 +36,42 @@ The study must distinguish: (1) what is explicitly stated in the source material
 ## Planned phases
 ### Phase MC0 — Source/specification audit
 Status: COMPLETE
-Capture user-supplied rules, identify ambiguities, validate arithmetic consistency of the published claims, and freeze a primary interpretation only after the ambiguity register is explicit.
 
 ### Phase MC1 — Historical data acquisition and QA
-Status: IN PROGRESS
-Primary candidate: 1-minute NIFTY index + option dataset covering approximately 2021–2026. Validate coverage, strike completeness, expiries, timestamps, duplicate keys, missingness, and liquidity. Cross-check selected dates against exchange/public sources where feasible.
+Status: COMPLETE
+Authoritative one-lot baseline run 36523896565: 671 executed trades, -₹138,608.27 net; 2026 source coverage through 2026-07-01.
 
-### Phase MC2 — Underlying signal engine
-Status: NOT STARTED
-Construct 09:35–09:45 master candle; apply point-in-time 25-day daily EMA by default interpretation; generate breakout events and directional labels; measure underlying-only signal efficacy.
+### Phase MC2 — Cost/friction and execution-rule robustness
+Status: COST COMPLETE; 18-VARIANT EXECUTION GRID CALCULATIONS COMPLETE; AGGREGATION RERUN PENDING
+Cost workflow 36524250868 is authoritative for the primary full-cost audit. Execution workflow 36524818652 completed all 18 variant calculations and uploads, but its aggregate job failed on an aggregator path/schema defect. No variant is promoted or ranked as a winner.
 
-### Phase MC3 — Option execution engine
+### Phase MC3 — Underlying signal decomposition
 Status: NOT STARTED
-Resolve ATM definition, nearest-expiry contract rule, entry after 09:45 breakout, 40% premium stop, alternative EMA-based exit, and one-trade-per-session rule unless the frozen specification explicitly says otherwise.
+Separate underlying breakout efficacy from option implementation, including EMA-on/off and point-in-time signal metrics.
 
-### Phase MC4 — Baseline backtest
+### Phase MC4 — Option execution and baseline reconstruction
 Status: NOT STARTED
-Run the locked primary rule across all eligible sessions. Apply historical lot sizes and date-effective trading costs. Produce trade-level ledger and daily equity curve.
+Lock the primary option execution specification and reproduce the baseline with the final cost stack.
 
-### Phase MC5 — Robustness and sensitivity
+### Phase MC5 — Statistical inference and regime analysis
 Status: NOT STARTED
-Test breakout touch vs close confirmation; stop 30/40/50%; slippage stress; ATM timing; expiry selection; time/EMA exits; and broker/cost alternatives.
+Date-block bootstrap, year/month stability, 0DTE vs non-0DTE, volatility/trend/gap/range conditioning, and tail-risk analysis.
 
-### Phase MC6 — Statistical inference and regime analysis
+### Phase MC6 — Frozen out-of-sample validation
 Status: NOT STARTED
-Use date-block bootstrap; examine year/month stability; 0DTE vs non-0DTE; India VIX/volatility regime; gap, range-width, trend, and day-of-week conditioning. Treat sensitivity results as descriptive unless pre-registered.
+No parameter changes after freeze; evaluate unseen dates.
 
-### Phase MC7 — Frozen out-of-sample validation
+### Phase MC7 — Manuscript and final evidence package
 Status: NOT STARTED
-No parameter changes after freeze. Evaluate genuinely unseen dates. Keep 2026 forward period separate from development.
-
-### Phase MC8 — Manuscript and final evidence package
-Status: NOT STARTED
-Produce manuscript, tables, charts, appendices, data manifest, errors, reproducibility links, and final conclusion.
+Manuscript, charts, tables, appendices, data manifest, errors, reproducibility links, and final conclusion.
 
 ## Proposed sample split
 Development: 2021–2023
 Validation: 2024–2025
-Frozen forward test: 2026
-This split is provisional until dataset coverage and availability are confirmed.
+Frozen forward test: 2026, limited to source coverage
 
 ## Stop conditions
-The study will not claim reproducible 2021–2026 performance if the historical dataset cannot support that period with documented intraday option observations. A shorter but auditable sample is preferable to silently mixing incompatible sources.
-No production-readiness claim will be made from cumulative P&L alone.
+The study will not claim reproducible 2021–2026 performance if the historical dataset cannot support that period with documented intraday option observations. No production-readiness claim will be made from cumulative P&L alone.
 
-
-### MC1 closure
-Authoritative run 36522552275 completed all six yearly workers successfully. The one-lot baseline produced 671 trades and cumulative net P&L of -₹138,608.27. MC1 is closed as a negative baseline discovery; no parameter retuning is permitted inside MC1.
+## Current execution-grid gate
+All 18 predefined variants must be aggregated successfully before MC2 execution robustness can close. The grid is descriptive; no historical winner is selected.

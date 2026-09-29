@@ -12,3 +12,8 @@
 - Slippage sensitivity at 0.5/1/2 points per side remained negative.
 - Brokerage sensitivity at ₹10/₹15/₹20 per order remained negative.
 - MC2 cost block closed; execution-rule robustness block started.
+
+## 2026-09-29 — MC2 execution grid calculation
+- Workflow 36524818652 completed all 18 variant calculation jobs and all 18 artifact uploads successfully.
+- Aggregate job failed before producing the grid because `aggregate_mc2_execution.py` did not discover the downloaded summary files with its shallow glob and then attempted to sort an empty DataFrame.
+- No variant is accepted as selected/promoted. The aggregation defect is being repaired with recursive discovery plus an 18-row completeness assertion.

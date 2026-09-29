@@ -7,9 +7,11 @@ OUT=Path("artifacts/mc2_execution")
 OUT.mkdir(parents=True,exist_ok=True)
 
 rows=[]
-for p in ROOT.glob("*/summary.json"):
+for p in ROOT.rglob("summary.json"):
     with open(p) as f: s=json.load(f)
     trades_path=p.parent/"trades.csv"
+    if not trades_path.exists():
+        continue
     t=pd.read_csv(trades_path)
     t["trading_day"]=pd.to_datetime(t["trading_day"])
     weekly=t.groupby(t["trading_day"].dt.to_period("W-FRI"))["net_pnl"].sum()
@@ -27,6 +29,10 @@ for p in ROOT.glob("*/summary.json"):
         "weeks_ge_5000_fraction":float((weekly>=5000).mean()),
         "zero_dte_net_pnl":float(t.loc[t.dte==0,"net_pnl"].sum()),
     })
+
+if len(rows) != 18:
+    raise RuntimeError(f"Expected 18 completed execution variants, found {len(rows)}")
+
 res=pd.DataFrame(rows).sort_values(["breakout_mode","stop_pct","time_exit"])
 res.to_csv(OUT/"execution_variant_grid.csv",index=False)
 with open(OUT/"status.json","w") as f:
