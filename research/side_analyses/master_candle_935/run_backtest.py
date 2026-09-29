@@ -34,7 +34,7 @@ from huggingface_hub import HfApi, hf_hub_download
 DATASET = "thetrademarkk/india-index-options-1m"
 REVISION = "main"
 TZ = "Asia/Kolkata"
-LOTS = 10
+LOTS = 1
 BROKERAGE_PER_ORDER = 20.0
 SLIPPAGE_PER_SIDE = 1.0
 STOP_PCT = 0.40
@@ -371,6 +371,7 @@ def main():
         "revision": REVISION,
         "coverage_start": str(trades["trading_day"].min()),
         "coverage_end": str(trades["trading_day"].max()),
+        "lots_per_trade": LOTS,
         "trades": int(len(trades)),
         "mean_net_pnl": float(trades["net_pnl"].mean()),
         "median_net_pnl": float(trades["net_pnl"].median()),
