@@ -41,8 +41,14 @@ jobs:
           if [ "$YEAR" = "2026" ]; then END="2026-08-04"; else END="$YEAR-12-31"; fi
           python research/side_analyses/master_candle_935/run_backtest.py --start "$START" --end "$END" --out-dir "artifacts/master_candle_935/$YEAR"
 
-      - name: Upload one-lot baseline artifact
+      - name: Remove local data cache before upload
+        run: rm -rf "artifacts/master_candle_935/${{ matrix.year }}/hf_cache"
+
+      - name: Upload one-lot baseline results
         uses: actions/upload-artifact@v4
         with:
           name: master-candle-935-baseline-${{ matrix.year }}
-          path: artifacts/master_candle_935/${{ matrix.year }}
+          path: |
+            artifacts/master_candle_935/${{ matrix.year }}/summary.json
+            artifacts/master_candle_935/${{ matrix.year }}/signals.csv
+            artifacts/master_candle_935/${{ matrix.year }}/trades.csv
