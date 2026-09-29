@@ -1,10 +1,10 @@
-name: Master Candle 09:35 Research
+name: Master Candle 09:35 Research — MC2 Cost Audit
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - side-analysis/master-candle-935
+      - side-analysis/master-candle-935-mc2-cost-audit
   pull_request:
     branches:
       - main
@@ -34,15 +34,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas pyarrow huggingface_hub
 
-      - name: Run one-lot baseline
+      - name: Run one-lot full-friction baseline
         run: |
           YEAR="${{ matrix.year }}"
           if [ "$YEAR" = "2021" ]; then START="2021-05-27"; else START="$YEAR-01-01"; fi
           if [ "$YEAR" = "2026" ]; then END="2026-08-04"; else END="$YEAR-12-31"; fi
           python research/side_analyses/master_candle_935/run_backtest.py --start "$START" --end "$END" --out-dir "artifacts/master_candle_935/$YEAR"
 
-      - name: Upload one-lot baseline artifact
+      - name: Upload one-lot full-friction artifact
         uses: actions/upload-artifact@v4
         with:
-          name: master-candle-935-baseline-${{ matrix.year }}
+          name: master-candle-935-mc2-full-friction-${{ matrix.year }}
           path: artifacts/master_candle_935/${{ matrix.year }}
