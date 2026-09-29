@@ -114,3 +114,25 @@ Phase 9 is the capital-interpretation phase for the locked Phase 8 primary sampl
 
 ### Phase 10 — Publication
 The research manuscript is now published in the repository as **Version 1.0** under `publication/`, with a clean manuscript, supplement, current figures/charts, authoritative results table, and `CITATION.cff`. The package is a repository-public preprint and is not represented as peer reviewed or journal accepted.
+
+
+## Current side analysis — NIFTY 09:35–09:45 Master Candle
+
+The main BATMAN research line is paused without changing its locked conclusions. A separate branch, [side-analysis/master-candle-935](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/tree/side-analysis/master-candle-935), contains the Master Candle strategy audit and baseline runner.
+
+Status: **MC0 complete; MC1 in progress; no numerical result accepted yet.**
+
+Key findings:
+- The supplied annual profit figures total ₹2.29 crore, which does not reconcile with the stated ₹2.76 crore overall gross profit.
+- The supplied description is internally ambiguous on long versus short option direction.
+- “25-day EMA” is ambiguous between a daily EMA and a 10-minute-period EMA; the baseline specification uses the prior completed daily EMA.
+- The existing BATMAN option dataset starts in October 2024 and cannot reproduce a 2021–2026 claim.
+- A separate 1-minute NIFTY index/options dataset candidate covers from May 2021 onward but documents partial option coverage.
+- The baseline runner is committed and a manual GitHub Actions workflow exists; the available connector has not surfaced an authoritative workflow run/artifact yet.
+
+Side-analysis files:
+- [Plan](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/PLAN.md)
+- [Strategy specification](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/STRATEGY_SPEC.md)
+- [Initial audit](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/INITIAL_AUDIT.md)
+- [Source/literature audit](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/SOURCE_AUDIT.md)
+- [Backtest runner](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/run_backtest.py)
