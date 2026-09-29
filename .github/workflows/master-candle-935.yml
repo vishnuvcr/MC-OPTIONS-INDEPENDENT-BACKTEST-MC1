@@ -1,0 +1,40 @@
+name: Master Candle 09:35 Research
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - side-analysis/master-candle-935
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow huggingface_hub
+
+      - name: Run baseline
+        run: |
+          python research/side_analyses/master_candle_935/run_backtest.py
+
+      - name: Upload baseline artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-candle-935-baseline
+          path: artifacts/master_candle_935
