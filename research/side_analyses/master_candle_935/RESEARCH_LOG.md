@@ -1,32 +1,8 @@
-# Research Log — Master Candle 09:35–09:45
+[object Object]
 
-## 2026-09-29 — MC0 initiation
-- Main Daily Options v1 research track is paused; no main-strategy conclusion changed.
-- New side analysis created on branch side-analysis/master-candle-935.
-- Existing repository research governance and error-logging standards were reviewed before starting.
-- User-supplied strategy rules were converted into a provisional executable specification.
-- Major ambiguity discovered: long-vs-short option wording.
-- Major ambiguity discovered: meaning/timeframe of “25-day EMA”.
-- Major ambiguity discovered: breakout confirmation and exit logic.
-- Arithmetic audit found that listed annual profits sum to ₹2.29 crore, not the claimed ₹2.76 crore.
-- Existing validated intraday data begins Oct-2024; a separate 2021–2026 dataset candidate is required.
+## 2026-09-29 — MC1 closure
+The initial serial execution architecture stalled because it processed the full option-expiry universe in one job. The runner was corrected to execute six independent calendar-year workers. Authoritative Actions run 36522552275 completed all six workers successfully.
 
-## 2026-09-29 — MC1 runner implemented
-- Added a reproducible GitHub Actions backtest runner using the public 1-minute NIFTY index/options dataset candidate.
-- Baseline uses long ATM directional option buying, first 1-minute close beyond the 09:35–09:45 range, prior-day daily 25 EMA filter, nearest listed expiry, 40% premium stop, one trade/day, 15:15 time exit, 10 lots, date-effective NIFTY lot-size proxy, ₹20/order brokerage, STT, and 1 option point adverse slippage per side.
-- Full all-in venue/statutory friction remains a later robustness stage rather than being guessed into the baseline.
+Result: 671 one-lot trades; cumulative baseline net P&L -₹138,608.27; weighted mean -₹206.57/trade; 144 0-DTE trades contributed -₹20,877.66. MC1 closed as a negative baseline discovery. No numerical result from the earlier 10-lot configuration is accepted.
 
-## 2026-09-29 — MC1 execution status
-- Pull request #15 created from the side-analysis branch.
-- The manual/push/pull-request workflow definition is present.
-- The available connector did not return a workflow run after the PR creation, so no numerical backtest output is accepted yet.
-- MC1 remains IN PROGRESS pending an authoritative action result/artifact.
-
-## 2026-09-29 — MC1 workflow registration
-- Registered the workflow definition on the repository default branch so the open PR can execute it as a pull-request check.
-- Strategy implementation remains isolated on the side branch; the main research rule is unchanged.
-
-## 2026-09-29 — User sizing locked
-- User confirmed intended trading size is **1 lot only**.
-- All user-facing capital, P&L, drawdown, risk and return calculations will therefore be expressed at one historical NIFTY lot per trade.
-- The video’s 10-lot headline results remain source context only and will not be presented as the user’s expected P&L.
+Next phase: MC2 full Paytm Money/NSE friction audit and execution-cost reconciliation.
