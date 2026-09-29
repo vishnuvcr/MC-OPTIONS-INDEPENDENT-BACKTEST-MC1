@@ -1,6 +1,6 @@
 # Master Candle 09:35–09:45 — Backtest Research Plan
 
-Status: INITIATED — specification/audit stage
+Status: MC0 COMPLETE; MC1 IN PROGRESS
 Main research track: PAUSED (unchanged)
 Side-analysis branch: side-analysis/master-candle-935
 
@@ -37,11 +37,11 @@ The study must distinguish: (1) what is explicitly stated in the source material
 
 ## Planned phases
 ### Phase MC0 — Source/specification audit
-Status: IN PROGRESS
+Status: COMPLETE
 Capture user-supplied rules, identify ambiguities, validate arithmetic consistency of the published claims, and freeze a primary interpretation only after the ambiguity register is explicit.
 
 ### Phase MC1 — Historical data acquisition and QA
-Status: NOT STARTED
+Status: IN PROGRESS
 Primary candidate: 1-minute NIFTY index + option dataset covering approximately 2021–2026. Validate coverage, strike completeness, expiries, timestamps, duplicate keys, missingness, and liquidity. Cross-check selected dates against exchange/public sources where feasible.
 
 ### Phase MC2 — Underlying signal engine
