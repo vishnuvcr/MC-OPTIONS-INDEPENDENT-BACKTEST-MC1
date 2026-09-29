@@ -11,3 +11,5 @@
 | 2026-09-29 | MC1 | The available GitHub connector did not surface a workflow-dispatch/run result for the new baseline workflow. | Do not treat the runner as numerically completed. Keep MC1 status IN PROGRESS until an authoritative workflow result/artifact is available. |
 
 | 2026-09-29 | MC1 | Baseline runner initially encoded 10 lots, inconsistent with user's later sizing instruction. | Corrected constant to LOTS=1 and logged the change; no numerical result from the old 10-lot runner is accepted. |
+
+| 2026-09-29 | Infrastructure | Attempted unavailable GitHub connector function for default-branch lookup. | Stopped that call and continued using available branch/PR/workflow primitives; no research result affected. |
