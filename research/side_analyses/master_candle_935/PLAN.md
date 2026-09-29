@@ -1,6 +1,6 @@
 # Master Candle 09:35–09:45 — Backtest Research Plan
 
-Status: MC0 COMPLETE; MC1 IN PROGRESS — 1-lot runner corrected
+Status: MC0 COMPLETE; MC1 COMPLETE — negative baseline discovery; MC2 COST/FRICTION AUDIT IN PROGRESS
 Main research track: PAUSED (unchanged)
 Side-analysis branch: side-analysis/master-candle-935
 
@@ -81,3 +81,7 @@ This split is provisional until dataset coverage and availability are confirmed.
 ## Stop conditions
 The study will not claim reproducible 2021–2026 performance if the historical dataset cannot support that period with documented intraday option observations. A shorter but auditable sample is preferable to silently mixing incompatible sources.
 No production-readiness claim will be made from cumulative P&L alone.
+
+
+### MC1 closure
+Authoritative run 36522552275 completed all six yearly workers successfully. The one-lot baseline produced 671 trades and cumulative net P&L of -₹138,608.27. MC1 is closed as a negative baseline discovery; no parameter retuning is permitted inside MC1.
