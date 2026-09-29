@@ -21,3 +21,7 @@
 - The manual/push/pull-request workflow definition is present.
 - The available connector did not return a workflow run after the PR creation, so no numerical backtest output is accepted yet.
 - MC1 remains IN PROGRESS pending an authoritative action result/artifact.
+
+## 2026-09-29 — MC1 workflow registration
+- Registered the workflow definition on the repository default branch so the open PR can execute it as a pull-request check.
+- Strategy implementation remains isolated on the side branch; the main research rule is unchanged.
