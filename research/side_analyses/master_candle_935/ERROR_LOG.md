@@ -15,3 +15,7 @@
 | 2026-09-29 | Infrastructure | Attempted unavailable GitHub connector function for default-branch lookup. | Stopped that call and continued using available branch/PR/workflow primitives; no research result affected. |
 
 | 2026-09-29 | Infrastructure | GitHub Actions run remains unavailable through the connector after adding a main-branch execution path; local Git clone also failed because outbound GitHub DNS/network access is unavailable in the sandbox. | No numerical backtest result accepted. Runner remains ready for an authoritative Actions execution. |
+
+| 2026-09-29 | MC1 | Serial full-universe option processing was effectively stalled/opaque. | Replaced with six parallel year-partitioned workers; all six completed successfully in authoritative run 36522552275. |
+| 2026-09-29 | MC1 | 2026 source coverage ends 2026-07-01 rather than requested 2026-08-04. | Recorded explicitly in result; no extrapolation beyond observed source coverage. |
+| 2026-09-29 | MC1 | Baseline friction model is not yet the complete Paytm Money/NSE statutory stack. | MC1 result is labelled baseline discovery; MC2 will reconcile full historical/current charges. |
