@@ -9,7 +9,7 @@
 - Directional option trade described by the user as ATM.
 - Risk: fixed 40% premium stop; alternatively/trailing exit involving EMA 25.
 - Friction: slippage + broker charges explicitly accounted for.
-- Published backtest claim: 10 lots over a broad 2021–2026 period.
+- User execution size: **1 lot only**. The published 10-lot video result is not the user's intended sizing and will not be used for the user's capital/P&L projection.
 
 ## Critical interpretation register
 
@@ -42,7 +42,10 @@ The supplied wording is ambiguous between premium stop only + end-of-day exit, p
 ### 9. Re-entry / opposite breakout
 Default: one trade per session; no re-entry after stop. Sensitivity: allow second trade after an opposite breakout only as a separate scenario.
 
-### 10. Time exit
+### 10. Position sizing
+Primary user sizing: **1 historical contract lot per trade**. The contract's date-effective NIFTY lot size determines the number of option units. No 10-lot scaling is used for the user's baseline.
+
+### 11. Time exit
 Primary candidate: 15:15 IST to avoid end-of-session microstructure. This remains to be aligned with the source/video wording.
 
 ## Point-in-time constraints
