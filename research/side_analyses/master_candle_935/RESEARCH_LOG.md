@@ -25,3 +25,8 @@
 ## 2026-09-29 — MC1 workflow registration
 - Registered the workflow definition on the repository default branch so the open PR can execute it as a pull-request check.
 - Strategy implementation remains isolated on the side branch; the main research rule is unchanged.
+
+## 2026-09-29 — User sizing locked
+- User confirmed intended trading size is **1 lot only**.
+- All user-facing capital, P&L, drawdown, risk and return calculations will therefore be expressed at one historical NIFTY lot per trade.
+- The video’s 10-lot headline results remain source context only and will not be presented as the user’s expected P&L.
