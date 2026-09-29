@@ -2,23 +2,39 @@ name: Master Candle 09:35 Research
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - side-analysis/master-candle-935
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
-  validate-spec:
+  backtest:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate side-analysis files
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
         run: |
-          set -euo pipefail
-          test -s research/side_analyses/master_candle_935/PLAN.md
-          test -s research/side_analyses/master_candle_935/STRATEGY_SPEC.md
-          test -s research/side_analyses/master_candle_935/INITIAL_AUDIT.md
-          test -s research/side_analyses/master_candle_935/ERROR_LOG.md
-          test -s research/side_analyses/master_candle_935/RESEARCH_LOG.md
-          echo "MC0 specification/audit files present."
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow huggingface_hub
+
+      - name: Run baseline
+        run: |
+          python research/side_analyses/master_candle_935/run_backtest.py
+
+      - name: Upload baseline artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-candle-935-baseline
+          path: artifacts/master_candle_935
