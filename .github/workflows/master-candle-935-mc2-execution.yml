@@ -50,7 +50,7 @@ jobs:
       - name: Upload variant result
         uses: actions/upload-artifact@v4
         with:
-          name: mc2-execution-${{ matrix.breakout }}-${{ matrix.stop }}-${{ matrix.exit }}
+          name: mc2-execution-${{ strategy.job-index }}
           path: |
             artifacts/variant/**/summary.json
             artifacts/variant/**/trades.csv
