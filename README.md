@@ -120,7 +120,7 @@ The research manuscript is now published in the repository as **Version 1.0** un
 
 The main BATMAN research line is paused without changing its locked conclusions. A separate branch, [side-analysis/master-candle-935](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/tree/side-analysis/master-candle-935), contains the Master Candle strategy audit and baseline runner.
 
-Status: **MC0 complete; MC1 in progress; no numerical result accepted yet.**
+Status: **MC0 complete; MC1 complete — negative baseline discovery; MC2 cost/friction audit in progress.**
 
 Key findings:
 - The supplied annual profit figures total ₹2.29 crore, which does not reconcile with the stated ₹2.76 crore overall gross profit.
@@ -128,7 +128,9 @@ Key findings:
 - “25-day EMA” is ambiguous between a daily EMA and a 10-minute-period EMA; the baseline specification uses the prior completed daily EMA.
 - The existing BATMAN option dataset starts in October 2024 and cannot reproduce a 2021–2026 claim.
 - A separate 1-minute NIFTY index/options dataset candidate covers from May 2021 onward but documents partial option coverage.
-- The baseline runner is committed and a manual GitHub Actions workflow exists; the available connector has not surfaced an authoritative workflow run/artifact yet.
+- The corrected 1-lot baseline executed successfully in authoritative GitHub Actions run `36522552275`, using six parallel yearly workers. All six artifacts uploaded successfully.
+- MC1 result: **671 trades, cumulative net P&L -₹138,608.27 at one historical lot**. The weighted mean is -₹206.57/trade; 144 0-DTE trades contributed -₹20,877.66.
+- This is a negative baseline discovery, not yet the final manuscript conclusion. MC2 will reconcile the full Paytm Money/NSE/statutory friction stack and perform robustness/weekly-consistency analysis.
 
 Side-analysis files:
 - [Plan](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/PLAN.md)
@@ -136,3 +138,7 @@ Side-analysis files:
 - [Initial audit](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/INITIAL_AUDIT.md)
 - [Source/literature audit](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/SOURCE_AUDIT.md)
 - [Backtest runner](https://github.com/vishnuvcr/MC-OPTIONS-INDEPENDENT-BACKTEST-MC1/blob/side-analysis/master-candle-935/research/side_analyses/master_candle_935/run_backtest.py)
+
+
+### MC1 baseline result
+See [authoritative MC1 result](research/side_analyses/master_candle_935/RESULT_MC1_BASELINE.md) for the six-year one-lot table, coverage caveats, and next-phase requirements.
