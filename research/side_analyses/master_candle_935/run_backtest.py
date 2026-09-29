@@ -11,7 +11,7 @@ Primary interpretation:
 - 40% premium stop
 - no re-entry
 - time exit 15:15 IST
-- 10 lots
+- 1 historical NIFTY lot per trade
 - historical contract-cohort lot-size proxy
 - 1 option point adverse slippage per side
 - brokerage ₹20/order in baseline
