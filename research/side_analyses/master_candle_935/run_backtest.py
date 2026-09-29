@@ -37,6 +37,10 @@ TZ = "Asia/Kolkata"
 LOTS = 1
 BROKERAGE_PER_ORDER = 20.0
 SLIPPAGE_PER_SIDE = 1.0
+NSE_OPTIONS_TXN_RATE = 0.0003553
+SEBI_TURNOVER_RATE = 0.000001
+STAMP_DUTY_RATE = 0.00003
+GST_RATE = 0.18
 STOP_PCT = 0.40
 TIME_EXIT = "15:15"
 
@@ -68,6 +72,11 @@ class Trade:
     brokerage: float
     stt: float
     slippage: float
+    exchange_txn: float
+    sebi_turnover: float
+    stamp_duty: float
+    gst: float
+    total_cost: float
     net_pnl: float
 
 
@@ -293,9 +302,15 @@ def process_expiry_group(
         qty = LOTS * lot
         gross = (exit_exec - entry_exec) * qty
         brokerage = 2.0 * BROKERAGE_PER_ORDER
+        turnover = (entry_exec + exit_exec) * qty
+        exchange_txn = turnover * NSE_OPTIONS_TXN_RATE
+        sebi_turnover = turnover * SEBI_TURNOVER_RATE
+        stamp_duty = (entry_exec * qty) * STAMP_DUTY_RATE
         stt = (exit_exec * qty) * stt_rate(day)
+        gst = GST_RATE * (brokerage + exchange_txn + sebi_turnover)
         slippage = 2.0 * SLIPPAGE_PER_SIDE * qty
-        net = gross - brokerage - stt
+        total_cost = brokerage + exchange_txn + sebi_turnover + stamp_duty + stt + gst
+        net = gross - total_cost
 
         dte = (expiry - day).days
         trades.append(Trade(
@@ -324,6 +339,11 @@ def process_expiry_group(
             brokerage=float(brokerage),
             stt=float(stt),
             slippage=float(slippage),
+            exchange_txn=float(exchange_txn),
+            sebi_turnover=float(sebi_turnover),
+            stamp_duty=float(stamp_duty),
+            gst=float(gst),
+            total_cost=float(total_cost),
             net_pnl=float(net),
         ))
     return trades
