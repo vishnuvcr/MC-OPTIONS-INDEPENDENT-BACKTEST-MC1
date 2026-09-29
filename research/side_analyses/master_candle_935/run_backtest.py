@@ -90,7 +90,7 @@ def download_index(cache_dir: str) -> Path:
     return Path(path)
 
 
-def list_option_files() -> dict[date, str]:
+def list_option_files(start_day: date, end_day: date) -> dict[date, str]:
     api = HfApi()
     files = api.list_repo_files(DATASET, repo_type="dataset", revision=REVISION)
     out: dict[date, str] = {}
@@ -102,7 +102,8 @@ def list_option_files() -> dict[date, str]:
             exp = pd.to_datetime(stem, format="%Y-%m-%d").date()
         except ValueError:
             continue
-        out[exp] = f
+        if start_day <= exp <= end_day:
+            out[exp] = f
     return dict(sorted(out.items()))
 
 
@@ -335,6 +336,7 @@ def main():
     cache_dir = str(out_dir / "hf_cache")
     os.makedirs(cache_dir, exist_ok=True)
 
+    print(f"MC1 one-lot baseline: {args.start} to {args.end}", flush=True)
     idx_path = download_index(cache_dir)
     index = pd.read_parquet(idx_path)
     signals = build_signal_table(
@@ -344,7 +346,9 @@ def main():
     )
     signals.to_csv(out_dir / "signals.csv", index=False)
 
-    files = list_option_files()
+    start_day = pd.Timestamp(args.start).date()
+    end_day = pd.Timestamp(args.end).date()
+    files = list_option_files(start_day, end_day)
     expiries = list(files)
     if not expiries:
         raise RuntimeError("No NIFTY option expiry files found")
