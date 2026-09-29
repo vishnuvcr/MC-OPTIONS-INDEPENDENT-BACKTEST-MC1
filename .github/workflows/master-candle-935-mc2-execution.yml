@@ -1,0 +1,88 @@
+name: Master Candle MC2 Execution Robustness
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - side-analysis/master-candle-935-mc2
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  variants:
+    name: variant-${{ matrix.breakout }}-${{ matrix.stop }}-${{ matrix.exit }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        breakout: [close, touch]
+        stop: ["0.30", "0.40", "0.50"]
+        exit: ["14:30", "15:00", "15:15"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow huggingface_hub
+
+      - name: Run execution variant
+        env:
+          BREAKOUT: ${{ matrix.breakout }}
+          STOP: ${{ matrix.stop }}
+          EXIT_TIME: ${{ matrix.exit }}
+        run: |
+          NAME="${BREAKOUT}_stop${STOP}_exit${EXIT_TIME//:/}"
+          python research/side_analyses/master_candle_935/run_mc2_execution_variant.py             --start 2021-05-27             --end 2026-08-04             --breakout-mode "$BREAKOUT"             --stop-pct "$STOP"             --time-exit "$EXIT_TIME"             --out-dir "artifacts/variant/$NAME"
+          rm -rf "artifacts/variant/$NAME/hf_cache"
+
+      - name: Upload variant result
+        uses: actions/upload-artifact@v4
+        with:
+          name: mc2-execution-${{ matrix.breakout }}-${{ matrix.stop }}-${{ matrix.exit }}
+          path: |
+            artifacts/variant/**/summary.json
+            artifacts/variant/**/trades.csv
+
+  aggregate:
+    name: aggregate-execution-grid
+    needs: variants
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pandas
+
+      - name: Download all variant results
+        uses: actions/download-artifact@v5
+        with:
+          pattern: mc2-execution-*
+          path: artifacts/variants
+          merge-multiple: false
+
+      - name: Aggregate
+        run: python research/side_analyses/master_candle_935/aggregate_mc2_execution.py
+
+      - name: Upload execution grid
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-candle-935-mc2-execution-grid
+          path: artifacts/mc2_execution
